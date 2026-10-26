@@ -1,0 +1,8 @@
+{
+  "schema": "castsmith.studio-project/v1",
+  "profile": "threejs-humanoid-lite",
+  "style": "",
+  "target_engine": "unspecified",
+  "paid_operations": "explicit-confirmation-per-operation",
+  "local_candidate_limit": 2
+}

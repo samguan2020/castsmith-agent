@@ -1,0 +1,2 @@
+# Install the engine with bootstrap.ps1 first.
+PyYAML>=6,<7

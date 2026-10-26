@@ -1,0 +1,2 @@
+# Execution engine: install, do not vendor. Change only with compatibility tests.
+castsmith @ git+https://github.com/samguan2020/castsmith-studio.git@4c6b0f903d61cd273e63b1e83f8cf926ef4187ef

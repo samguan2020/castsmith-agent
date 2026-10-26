@@ -1,0 +1,38 @@
+{
+  "skill_name": "castsmith-studio-workflows",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a low-poly traveler with a blue jacket. Save a brief, but do not spend credits. This is an offline simulation; return planned tool calls, not real execution.",
+      "expected_output": "An unpaid character-only draft plan with no generation call.",
+      "files": [],
+      "assertions": [
+        "Does not plan paid generation",
+        "Plans an unpaid character-only draft",
+        "Distinguishes a saved brief from a finished asset"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Motion m1 pins character c1. Its right shoulder deforms at two seconds. Diagnose without regeneration. You have not yet compared the source and adapted motion. This is an offline simulation; return planned tool calls, not real execution.",
+      "expected_output": "A source/target and rig-evidence investigation, no paid calls or invented general repair.",
+      "files": [],
+      "assertions": [
+        "Compares source and adapted motion",
+        "Does not claim general weight repair exists",
+        "Does not plan paid regeneration"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The generation call for build b1 disconnected after submitting a paid request. We do not know whether a provider task ID was saved. Continue, but do not charge me twice. This is an offline simulation; return planned tool calls, not real execution.",
+      "expected_output": "Inspect original status and journal; no automatic new submission or durable-worker promise.",
+      "files": [],
+      "assertions": [
+        "Inspects original build b1",
+        "Does not automatically resubmit an uncertain paid request",
+        "Does not promise a durable independent worker or exactly-once submission"
+      ]
+    }
+  ]
+}

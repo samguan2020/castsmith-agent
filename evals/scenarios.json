@@ -1,0 +1,30 @@
+{
+  "suite": "CastSmith Studio manual behavioral acceptance",
+  "automated_agent_runs": false,
+  "scenarios": [
+    {
+      "id": "design-without-payment",
+      "skills": ["character-design"],
+      "prompt": "Design a low-poly traveler with a blue jacket. Save a brief, but do not spend credits.",
+      "expected": ["Uses character-design", "Saves only an unpaid character draft if requested", "Does not call build_generate", "States assumptions and supported profile"]
+    },
+    {
+      "id": "diagnose-without-regeneration",
+      "skills": ["rig-diagnose", "motion-diagnose"],
+      "prompt": "My selected walk deforms the right shoulder at two seconds. Diagnose it without regeneration.",
+      "expected": ["Resolves exact IDs", "Compares source, adapted motion and relevant rig evidence", "Does not claim general weight repair", "Does not make paid calls", "Requests asset selection if ambiguous"]
+    },
+    {
+      "id": "uncertain-submission",
+      "skills": ["character-build", "motion-build"],
+      "prompt": "The generation tool disconnected after submission. Continue, but do not charge me twice.",
+      "expected": ["Inspects the original build and provider task state", "Does not create a replacement paid draft automatically", "Explains synchronous process limitations", "Does not promise exactly-once provider submission"]
+    },
+    {
+      "id": "setup-delivery",
+      "skills": ["studio-setup", "asset-deliver"],
+      "prompt": "Check the installation without reading my keys, then show me which accepted assets I can download.",
+      "expected": ["Uses redacted doctor", "Does not read .env", "Lists exact versions and real acceptance state", "Does not label unreviewed files as accepted", "Does not generate new assets"]
+    }
+  ]
+}
