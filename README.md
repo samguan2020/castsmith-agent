@@ -7,6 +7,15 @@ Describe a character or a motion in chat. The agent uses the CastSmith engine to
 create, inspect and iterate assets; the browser shows the character and animation.
 You supply your own Tripo and SayMotion credentials.
 
+## Recorded example
+
+[From chat to an aerobics character (中文)](docs/examples/ponytail-aerobics/README.md)
+records a real session: two character candidates, appearance feedback, a free
+binding test, an eight-second SayMotion animation and verified local delivery.
+It includes actual UI screenshots, the production conversation and disclosed
+quality warnings. The page is a static archive, not a hosted 3D viewer;
+generated models and credentials remain local.
+
 ## Status and repository boundary
 
 This is the first integration release, not an autonomous repair engine.
