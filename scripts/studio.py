@@ -39,6 +39,45 @@ def initialize() -> None:
         print("Created .env template. Edit credentials locally; do not paste them into chat.")
 
 
+def validate_request(request: dict, kind: str) -> dict:
+    from castsmith.workflow import BuildWorkflow, character_generation_prompt
+
+    if not isinstance(request, dict):
+        raise ValueError("Request must be a JSON object")
+    normalized = BuildWorkflow._validate_request(request)
+    if kind == "character":
+        if normalized["motions"]:
+            raise ValueError("Character-first requests must use motions=[]")
+        prompt = character_generation_prompt(normalized["description"])
+        character = {
+            "characters": len(prompt),
+            "limit": 1024,
+            "description_limit": 1024 - len(character_generation_prompt("")),
+        }
+    elif kind == "motion":
+        if len(normalized["motions"]) != 1:
+            raise ValueError("Motion requests must contain exactly one clip")
+        character = None
+    else:
+        raise ValueError("Expected character or motion")
+    return {
+        "valid": True,
+        "kind": kind,
+        "character_prompt": character,
+        "motion_prompts": [
+            {"name": motion["name"], "characters": len(motion["description"]), "limit": 1000}
+            for motion in normalized["motions"]
+        ],
+        "provider_called": False,
+    }
+
+
+def validate_request_file(path: Path, kind: str) -> dict:
+    if path.suffix.lower() != ".json":
+        raise ValueError("Preflight accepts only a non-secret .json request file")
+    return validate_request(json.loads(path.read_text(encoding="utf-8-sig")), kind)
+
+
 def doctor(require_generation: str | None = None) -> int:
     checks: dict[str, object] = {
         "python_supported": sys.version_info >= (3, 11),
@@ -122,8 +161,11 @@ def main(argv: list[str] | None = None) -> int:
     check = commands.add_parser("doctor", help="Redacted, provider-free environment diagnostics")
     check.add_argument("--require-generation", choices=("character", "motion"))
     commands.add_parser("mcp", help="Run the engine's stdio MCP server")
-    web = commands.add_parser("web", help="Run the engine's loopback-only asset viewer")
+    web = commands.add_parser("web", help="Run the read-only local three-section preview")
     web.add_argument("--port", type=int, default=8766)
+    validate = commands.add_parser("validate-request", help="Validate prompts locally without credits")
+    validate.add_argument("--kind", required=True, choices=("character", "motion"))
+    validate.add_argument("--file", required=True, type=Path)
     commands.add_parser("library")
     commands.add_parser("builds")
     status = commands.add_parser("status")
@@ -136,12 +178,15 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "doctor":
             return doctor(args.require_generation)
+        if args.command == "validate-request":
+            print(json.dumps(validate_request_file(args.file, args.kind), indent=2))
+            return 0
         if args.command == "mcp":
             from castsmith.server import main as serve
             serve()
             return 0
         if args.command == "web":
-            from castsmith.web import main as web_main
+            from preview import main as web_main
             web_main(["--host", "127.0.0.1", "--port", str(args.port)])
             return 0
         from castsmith.cli import main as cli_main

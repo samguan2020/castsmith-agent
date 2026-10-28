@@ -13,6 +13,7 @@ import tempfile
 import threading
 import unittest
 import urllib.request
+import urllib.error
 from pathlib import Path
 from unittest.mock import patch
 
@@ -26,6 +27,90 @@ SPEC.loader.exec_module(studio)
 
 
 class WorkspaceTests(unittest.TestCase):
+    def test_character_preflight_checks_final_prompt_at_exact_limit(self):
+        from castsmith.workflow import character_generation_prompt
+
+        overhead = len(character_generation_prompt(""))
+        request = {
+            "asset_id": "test-dancer", "profile": "threejs-humanoid-lite", "motions": [],
+            "description": "x" * (1024 - overhead),
+        }
+        with patch("castsmith.generation.GenerationEngine.start", side_effect=AssertionError("paid")):
+            result = studio.validate_request(request, "character")
+            self.assertEqual(result["character_prompt"]["characters"], 1024)
+            self.assertEqual(result["character_prompt"]["description_limit"], 1024 - overhead)
+            self.assertFalse(result["provider_called"])
+            request["description"] += "x"
+            with self.assertRaisesRegex(ValueError, "1024"):
+                studio.validate_request(request, "character")
+
+    def test_motion_preflight_checks_1000_characters_and_schema_without_changing_request(self):
+        request = {
+            "asset_id": "test-dancer", "profile": "threejs-humanoid-lite", "description": "Dancer",
+            "motions": [{"name": "dance", "description": "x" * 1000, "duration_seconds": 8, "loop": True}],
+        }
+        before = json.dumps(request)
+        self.assertEqual(studio.validate_request(request, "motion")["motion_prompts"][0]["characters"], 1000)
+        self.assertEqual(json.dumps(request), before)
+        request["motions"][0]["description"] += "x"
+        with self.assertRaisesRegex(ValueError, "1000"):
+            studio.validate_request(request, "motion")
+        request["motions"][0]["description"] = "Dance"
+        request["motions"][0]["loop"] = "yes"
+        with self.assertRaisesRegex(ValueError, "boolean"):
+            studio.validate_request(request, "motion")
+
+    def test_preflight_reports_invalid_file_and_request_without_success_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "request.json"
+            path.write_text("[]", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "JSON object"):
+                studio.validate_request_file(path, "character")
+            with self.assertRaisesRegex(ValueError, "non-secret"):
+                studio.validate_request_file(Path(directory) / ".env", "character")
+            output = io.StringIO()
+            with contextlib.redirect_stderr(output):
+                self.assertEqual(studio.main([
+                    "validate-request", "--kind", "character", "--file", str(path),
+                ]), 1)
+            self.assertIn("JSON object", output.getvalue())
+
+    def test_preflight_cli_succeeds_without_credentials_or_asset_state(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "request.json"
+            path.write_text(json.dumps({
+                "asset_id": "test-dancer", "description": "A red-haired adult street dancer",
+                "profile": "threejs-humanoid-lite", "motions": [],
+            }), encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "scripts" / "studio.py"),
+                 "validate-request", "--kind", "character", "--file", str(path)],
+                env={
+                    **os.environ, "CASTSMITH_ENV_FILE": str(root / "absent.env"),
+                    "CASTSMITH_STATE_ROOT": str(root / "state"),
+                },
+                capture_output=True, text=True, timeout=30, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            report = json.loads(result.stdout)
+            self.assertTrue(report["valid"])
+            self.assertFalse(report["provider_called"])
+            self.assertFalse((root / "state").exists())
+
+    def test_workflow_handoffs_and_unavailable_user_contract(self):
+        agent = (ROOT / ".github" / "agents" / "castsmith-studio.agent.md").read_text()
+        self.assertIn("two independent choices", agent)
+        self.assertIn("pause\nonce", agent)
+        self.assertIn("Revalidate any edited request", agent)
+        for skill in ("character-design", "character-build", "motion-build"):
+            content = (ROOT / ".github" / "skills" / skill / "SKILL.md").read_text()
+            self.assertIn("validate-request", content)
+            self.assertRegex(content.lower(), r"proactively offer")
+        for name in ("evals.json", "scenarios.json"):
+            suite = json.loads((ROOT / "evals" / name).read_text(encoding="utf-8"))
+            self.assertGreaterEqual(len(suite.get("evals", suite.get("scenarios", []))), 6)
+
     def test_pin_is_full_and_installed_commit_matches(self):
         pin = studio.expected_commit()
         self.assertRegex(pin, r"^[0-9a-f]{40}$")
@@ -158,6 +243,48 @@ class EngineIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
 
 class WebIntegrationTests(unittest.TestCase):
+    def test_read_only_preview_routes_renderer_modules_and_exact_version_links(self):
+        from castsmith.config import Settings
+        from castsmith.store import SQLiteStore
+        from castsmith.workflow import BuildWorkflow
+
+        spec = importlib.util.spec_from_file_location("preview", ROOT / "scripts" / "preview.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            settings = Settings(root, root / "state")
+            workflow = BuildWorkflow(SQLiteStore(settings.state_root))
+            with module.PreviewServer(("127.0.0.1", 0), workflow, settings) as server:
+                thread = threading.Thread(target=server.serve_forever)
+                thread.start()
+                try:
+                    base = f"http://127.0.0.1:{server.server_port}"
+                    with urllib.request.urlopen(base + "/?character=exact&section=rig", timeout=10) as response:
+                        html = response.read().decode("utf-8")
+                        self.assertIn("sha256-", response.headers["Content-Security-Policy"])
+                        self.assertNotIn("'unsafe-inline'", response.headers["Content-Security-Policy"].split("style-src")[0])
+                        self.assertEqual(html.count("<section "), 3)
+                    for route in module.static_files():
+                        with urllib.request.urlopen(base + route, timeout=10) as response:
+                            self.assertGreater(len(response.read()), 0)
+                    with urllib.request.urlopen(base + "/api/builds", timeout=10) as response:
+                        self.assertEqual(json.load(response)["builds"], [])
+                    for route, status in (("/api/builds", 405), ("/api/builds/fake/review", 405)):
+                        request = urllib.request.Request(base + route, data=b"{}", method="POST")
+                        with self.assertRaises(urllib.error.HTTPError) as caught:
+                            urllib.request.urlopen(request, timeout=10)
+                        self.assertEqual(caught.exception.code, status)
+                    for route in ("/api/config", "/vendor/three/package.json", "/static/../.env"):
+                        with self.assertRaises(urllib.error.HTTPError) as caught:
+                            urllib.request.urlopen(base + route, timeout=10)
+                        self.assertEqual(caught.exception.code, 404)
+                    self.assertEqual(workflow.list(), [])
+                finally:
+                    server.shutdown()
+                    thread.join(timeout=10)
+                    self.assertFalse(thread.is_alive())
+
     def test_real_viewer_health_and_bundle_without_provider_access(self):
         from castsmith.config import Settings
         from castsmith.store import SQLiteStore

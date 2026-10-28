@@ -14,11 +14,18 @@ description: "Design or revise a game character concept and production brief. Us
 4. Produce a concise brief: asset ID, appearance description, intended motions,
    constraints, assumptions and acceptance criteria. Prefer lowercase letters,
    digits and hyphens, at most 15 characters, for new asset and motion names.
-5. Check the engine's character prompt validation rather than guessing remaining
-   provider capacity: the engine adds anatomy constraints to the description.
-   Never silently truncate requirements.
+5. Before saving, run studio.py validate-request --kind character --file
+   <request.json> with the complete character-only request, using the workspace
+   interpreter. It checks the 1024-character final prompt INCLUDING the engine's
+   anatomy constraints. Compact redundant wording and revalidate until it
+   passes; never silently truncate or use paid generation to test length.
 6. Save the agreed brief as a draft using build_create with motions=[] if the
    user wants it persisted. A draft is not a completed character and costs nothing.
 
-Return the brief and any draft ID. Do not generate merely because a brief exists.
-Move to character-build only when the user wants generation.
+7. Return the brief and any draft ID, then proactively offer to start creation
+   with the host's confirmation tool. Include Tripo and potential API credit use
+   so an explicit yes can authorize this exact brief; do not invent a price.
+   If the user asked for design only or no payment, respect that scope instead.
+8. Move to character-build after the user's actual creation decision. A saved
+   brief or an unanswered form is not consent. If the user is unavailable,
+   leave one concise next action and pause without repeating the request.

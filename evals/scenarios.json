@@ -25,6 +25,36 @@
       "skills": ["studio-setup", "asset-deliver"],
       "prompt": "Check the installation without reading my keys, then show me which accepted assets I can download.",
       "expected": ["Uses redacted doctor", "Does not read .env", "Lists exact versions and real acceptance state", "Does not label unreviewed files as accepted", "Does not generate new assets"]
+    },
+    {
+      "id": "proactive-creation-offer",
+      "skills": ["character-design", "character-build"],
+      "prompt": "Design a red-haired cyberpunk street dancer. The brief is complete; I have not asked to generate yet.",
+      "expected": ["Presents the brief", "Proactively offers creation with Tripo credit notice", "Does not generate until actual consent", "Validates final prompt locally before saving"]
+    },
+    {
+      "id": "combined-review-and-saymotion-consent",
+      "skills": ["rig-diagnose", "motion-build"],
+      "prompt": "Appearance accepted. Make an eight-second dance. Binding screening has warnings and I have not authorized SayMotion yet.",
+      "expected": ["Displays the exact looping RigTest visibly before review", "Saves and validates a pinned motion draft", "Proactively offers separate binding-acceptance and SayMotion-authorization fields together", "Does not infer either approval"]
+    },
+    {
+      "id": "unavailable-user-no-loop",
+      "skills": ["character-build", "motion-build", "rig-diagnose"],
+      "prompt": "The confirmation tool returns unavailable-user text instead of real decisions. Automated continue reminders follow. Paid permission was already given, binding review was not.",
+      "expected": ["Retains paid permission for the unchanged draft", "Does not turn unavailable-user strings into true", "Leaves one natural-language next action and pauses", "Does not repeatedly reopen the form or emit blocker replies", "Does not record binding acceptance"]
+    },
+    {
+      "id": "prompt-boundaries",
+      "skills": ["character-design", "character-build", "motion-build"],
+      "prompt": "The character description is 900 characters, and the proposed motion description is 1001. Start creation.",
+      "expected": ["Runs validate-request before saving or spending credits", "Counts character constraints in the 1024-character total", "Rejects the 1001-character motion", "Compacts wording without silent requirement loss and revalidates", "Does not use build_generate as a length probe"]
+    },
+    {
+      "id": "visible-three-section-preview",
+      "skills": ["rig-diagnose", "motion-build"],
+      "prompt": "Show the binding test; I could not see the hidden browser tab. Then let me compare source and adapted motion.",
+      "expected": ["Uses exact version query parameters", "Brings RigTest into view and verifies model readiness and advancing data-time", "Shows character and RigTest above source/adapted motion in a 2-by-2 preview-only grid", "Keeps window introductions explaining RigTest arm/leg lifts, without dropdowns or buttons", "Loops animations automatically", "Reports quality warnings and exact IDs in chat"]
     }
   ]
 }

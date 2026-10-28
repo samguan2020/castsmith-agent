@@ -8,7 +8,9 @@ description: "Investigate motion defects such as foot sliding, body contact, jit
 1. Resolve the exact motion build, pinned character, clip index and reported
    time/frame. Query status and reports; do not reason from a stale selection.
 2. Compare SayMotion source with the adapted result at matching normalized
-   progress. Inspect the character's binding test if relevant.
+   progress in the preview's side-by-side motion section. Pin the exact versions
+   with character/motion/clip query parameters and use section=motion to bring
+   it into view. Inspect the separate RigTest section if binding is relevant.
 3. Classify evidence: source problem, character deformation, adaptation problem,
    heuristic false positive or unresolved cause. Record uncertainty.
 4. For implemented heading calibration/reprocessing, use build_reprocess with

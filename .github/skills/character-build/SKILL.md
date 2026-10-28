@@ -7,19 +7,30 @@ description: "Generate or revise a Tripo character from an agreed brief. Use whe
 
 1. Query the library and exact source/draft status. Resolve which character is
    intended; do not replace the working selection silently.
-2. Check redacted readiness with studio.py doctor --require-generation character.
+2. Check redacted readiness with the workspace interpreter:
+   .\.venv\Scripts\python.exe .\scripts\studio.py doctor --require-generation character.
+   Do not use global Python; it may resolve a different engine.
+   Run studio.py validate-request --kind character --file <request.json> before
+   saving. The 1024-character limit includes automatically appended anatomy
+   constraints. Require a passing local preflight, not a failed generation call.
 3. For a new character create a character-only draft using build_create,
    motions=[]. For revisions use character_feedback in appearance mode with
    the user-reviewed replacement description. Preserve lineage and old versions.
 4. Present the exact brief, provider and potential credit use. Obtain explicit
    permission for this generation before calling build_generate with
-   paid_confirmed=true. Do not invent an exact price.
+   paid_confirmed=true. Proactively offer this authorization; reuse a creation
+   approval already given after the same brief/provider/credit notice.
+   Do not invent an exact price. Missing/unavailable-user responses are not
+   approval: leave one next action and pause, without repeated blocker messages.
 5. The tool waits for completion. On interruption inspect build_status and
    provider journal data before considering a retry. Never generate a new
    version just to recover a polling failure.
 6. Open the local viewer and identify the exact build. Ask the user to inspect
    anatomy, appearance and clothing. Record their real decision using
-   character_review; confirmed=true is only for an explicit human decision.
+   character_review with decision=accepted or rejected; confirmed=true is only
+   for an explicit human decision. Use ?character=<build-id>&section=character,
+   bring the preview into view and verify the model loaded before requesting
+   review. Do not equate opening an invisible tab with displaying the asset.
 7. If accepted, select the intended working build explicitly and use rig-diagnose
    before paid motion generation. A successful rig operation is not proof of
    correct anatomy or good weights.

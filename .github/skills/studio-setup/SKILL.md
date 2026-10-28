@@ -18,9 +18,16 @@ description: "Initialize or troubleshoot the local CastSmith workspace. Use on f
 5. In VS Code, select CastSmith Studio and start/trust the castsmith MCP server
    from the workspace configuration. Verify character_library can be called.
 6. Start the preview only when needed:
+   Install its locked local renderer modules with npm ci if dependencies are
+   missing (Node.js/npm is needed for installation, not generation).
    `.\.venv\Scripts\python.exe .\scripts\studio.py web --port 8766`.
    Run it as a user-visible long-lived service. Check /api/health before linking
    http://127.0.0.1:8766. If occupied, use another explicit port; do not kill it.
+   This is a read-only 2-by-2 viewer: character and RigTest above,
+   adapted/source motion below. Each window has a title and short introduction;
+   RigTest explains arm/leg lifts. Animations loop automatically without controls.
+   Use exact character/rig/motion/clip/section URL query
+   parameters and verify the intended section is visible and loaded.
 
 Report core readiness, generation prerequisites missing and available next steps.
 Missing credentials should not prevent design-only work. No provider call is
