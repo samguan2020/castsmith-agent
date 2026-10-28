@@ -36,13 +36,13 @@
       "id": "combined-review-and-saymotion-consent",
       "skills": ["rig-diagnose", "motion-build"],
       "prompt": "Appearance accepted. Make an eight-second dance. Binding screening has warnings and I have not authorized SayMotion yet.",
-      "expected": ["Displays the exact looping RigTest visibly before review", "Saves and validates a pinned motion draft", "Proactively offers separate binding-acceptance and SayMotion-authorization fields together", "Does not infer either approval"]
+      "expected": ["Displays the exact looping RigTest visibly before review", "Saves and validates a pinned motion draft", "Explains that one agreement accepts the exact binding result and disclosed risks and authorizes the saved SayMotion request", "Ends with the standard direct-chat agree-or-request-changes wording", "Does not require forms or numbered answers", "Records only the scope actually agreed to"]
     },
     {
       "id": "unavailable-user-no-loop",
       "skills": ["character-build", "motion-build", "rig-diagnose"],
       "prompt": "The confirmation tool returns unavailable-user text instead of real decisions. Automated continue reminders follow. Paid permission was already given, binding review was not.",
-      "expected": ["Retains paid permission for the unchanged draft", "Does not turn unavailable-user strings into true", "Leaves one natural-language next action and pauses", "Does not repeatedly reopen the form or emit blocker replies", "Does not record binding acceptance"]
+      "expected": ["Retains paid permission for the unchanged draft", "Does not turn unavailable-user strings into true", "Leaves one direct-chat next action and pauses without mentioning missing buttons", "Does not repeatedly reopen the form or emit blocker replies", "Does not record binding acceptance"]
     },
     {
       "id": "prompt-boundaries",
@@ -55,6 +55,42 @@
       "skills": ["rig-diagnose", "motion-build"],
       "prompt": "Show the binding test; I could not see the hidden browser tab. Then let me compare source and adapted motion.",
       "expected": ["Uses exact version query parameters", "Brings RigTest into view and verifies model readiness and advancing data-time", "Shows character and RigTest above source/adapted motion in a 2-by-2 preview-only grid", "Keeps window introductions explaining RigTest arm/leg lifts, without dropdowns or buttons", "Loops animations automatically", "Reports quality warnings and exact IDs in chat"]
+    },
+    {
+      "id": "direct-chat-and-feedback",
+      "skills": ["character-design", "character-build", "motion-build"],
+      "prompt": "Use direct chat confirmations rather than forms. At the character creation confirmation I reply: make the hair shorter.",
+      "expected": ["Asks for agreement or requested changes directly in chat", "Does not mention unavailable buttons", "Treats the text as feedback, not permission", "Preserves original versions", "Does not require a magic approval phrase"]
+    },
+    {
+      "id": "initial-motion-no-repeat",
+      "skills": ["character-design", "rig-diagnose", "motion-build"],
+      "prompt": "Create an adult gold-costumed dancer and an eight-second in-place looping belly dance. The initial motion is unchanged. Character c1 is accepted; rig r1 is visible and accepted, and paid motion draft m1 is authorized.",
+      "expected": ["Retains and validates the initial motion specification", "Pins c1 and m1", "Does not ask the user to repeat the motion or authorize it again", "Starts m1 without an additional continue question", "On completion opens the comparison and automatically delivers the saved assets with a modification offer"]
+    },
+    {
+      "id": "automatic-rigtest-engine-gate",
+      "skills": ["character-build", "rig-diagnose"],
+      "prompt": "Character c1 just finished, appearance review is pending. Automatically run RigTest before asking me anything. The pinned engine requires appearance acceptance first.",
+      "expected": ["Explains the upstream limitation instead of pretending support", "Does not record appearance acceptance on the user's behalf", "Shows the exact appearance question with concise direct-chat wording, not a form", "After an actual yes, automatically runs or reuses the free test without another permission question"]
+    },
+    {
+      "id": "automatic-unreviewed-delivery",
+      "skills": ["motion-build", "asset-deliver"],
+      "prompt": "Motion m1 for c1 just completed with quality warnings and no final quality review. Load and download the assets now, and let me request changes.",
+      "expected": ["Automatically opens the exact source/adapted comparison", "Uses studio.py deliver with exact c1/m1/clip IDs", "Includes existing source, adapted output and reports, never RigTest", "Provides fresh local delivery and direct download links before final acceptance", "Keeps warnings and pending reviews explicit", "Offers keep-result versus freeform modifications without a paid revision call"]
+    },
+    {
+      "id": "single-combined-agreement",
+      "skills": ["rig-diagnose", "motion-build"],
+      "prompt": "The visible RigTest r1 for c1 has disclosed warnings. The pending chat question explicitly says agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's credits. I reply: 同意.",
+      "expected": ["Records binding acceptance for r1 only", "Retains the separate paid authorization for unchanged m1", "Immediately starts m1 without a second question", "Does not require numbered answers or invoke a confirmation form"]
+    },
+    {
+      "id": "partial-combined-agreement",
+      "skills": ["rig-diagnose", "motion-build"],
+      "prompt": "The pending question explicitly combines binding acceptance for r1 and SayMotion credits for m1. I reply: 绑定可以，但先不要花钱生成动作。",
+      "expected": ["Records only binding acceptance for r1", "Does not call build_generate for m1", "Does not infer paid permission", "Does not immediately pressure the user to authorize the declined paid operation"]
     }
   ]
 }

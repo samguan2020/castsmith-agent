@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from castsmith.workflow import BuildWorkflow
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -76,6 +83,79 @@ def validate_request_file(path: Path, kind: str) -> dict:
     if path.suffix.lower() != ".json":
         raise ValueError("Preflight accepts only a non-secret .json request file")
     return validate_request(json.loads(path.read_text(encoding="utf-8-sig")), kind)
+
+
+def deliver_assets(
+    workflow: BuildWorkflow, exports_root: Path, character_id: str, motion_id: str, clip: int,
+) -> dict:
+    character = workflow.get(character_id)
+    motion = workflow.get(motion_id)
+    if (
+        character.get("kind") != "character" or character.get("character_build_id")
+        or character.get("status") != "succeeded"
+    ):
+        raise ValueError("Delivery requires an exact completed character build")
+    if (
+        motion.get("kind") not in ("motion", "reprocess")
+        or motion.get("status") != "succeeded"
+        or motion.get("character_build_id") != character_id
+    ):
+        raise ValueError("Delivery requires a completed creative motion pinned to this character, not RigTest")
+    if type(clip) is not int or not 0 <= clip < len(motion["request"]["motions"]):
+        raise ValueError("Delivery clip index is out of range")
+    state_root = workflow.store.root.resolve()
+    artifacts_root = (state_root / "artifacts").resolve()
+    if not artifacts_root.is_relative_to(state_root):
+        raise ValueError("Artifact root must stay inside the local state directory")
+    files = []
+    for build, required, optional in (
+        (character, ["character.glb", "manifest.json"], ["preview.png"]),
+        (motion, [f"motion-{clip}.glb", f"quality-{clip}.json", "manifest.json"],
+         [f"source-motion-{clip}.glb"]),
+    ):
+        artifacts = {item["name"]: item for item in build["artifacts"]}
+        for name in required + [name for name in optional if name in artifacts]:
+            if name not in artifacts:
+                raise ValueError(f"Required delivery artifact missing: {build['id']} / {name}")
+            source = (artifacts_root / build["id"] / name).resolve()
+            if not source.is_relative_to(artifacts_root) or not source.is_file():
+                raise ValueError(f"Unsafe or missing delivery artifact: {build['id']} / {name}")
+            expected = artifacts[name]
+            with source.open("rb") as stream:
+                digest = hashlib.file_digest(stream, "sha256").hexdigest()
+            if (
+                source.stat().st_size != expected.get("size_bytes")
+                or digest != expected.get("sha256")
+            ):
+                raise ValueError(f"Delivery artifact integrity check failed: {build['id']} / {name}")
+            files.append((source, {
+                "build_id": build["id"], "name": name,
+                "path": f"{build['id']}/{name}",
+                "size_bytes": expected["size_bytes"], "sha256": expected["sha256"],
+            }))
+    report = {
+        "character_build_id": character_id, "motion_build_id": motion_id, "clip": clip,
+        "appearance_review": character.get("appearance_review", {"status": "pending"}),
+        "motion_review": motion.get("review", {"status": "pending"}),
+        "quality_status": motion.get("quality", {}).get("status", "not_checked"),
+        "limitations": "Existing files only; delivery is not quality acceptance or a validated game-engine import.",
+        "files": [entry for _, entry in files],
+    }
+    exports_root.mkdir(parents=True, exist_ok=True)
+    destination = Path(tempfile.mkdtemp(prefix=f"{motion_id}-clip{clip}-", dir=exports_root))
+    try:
+        for source, entry in files:
+            target = destination / entry["build_id"] / entry["name"]
+            target.parent.mkdir(exist_ok=True)
+            shutil.copyfile(source, target)
+            with target.open("rb") as stream:
+                if hashlib.file_digest(stream, "sha256").hexdigest() != entry["sha256"]:
+                    raise ValueError(f"Copied artifact integrity check failed: {entry['name']}")
+        (destination / "delivery.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    except (OSError, ValueError):
+        shutil.rmtree(destination)
+        raise
+    return {"directory": str(destination.resolve()), **report}
 
 
 def doctor(require_generation: str | None = None) -> int:
@@ -147,6 +227,8 @@ def doctor(require_generation: str | None = None) -> int:
             "local_reprocessing": True, "generation_is_synchronous": True,
             "durable_jobs": False, "general_weight_repair": False,
             "agent_proof_approval": False,
+            "rig_test_requires_appearance_acceptance": True,
+            "local_delivery": True,
         },
     }, indent=2))
     return 0 if core_ready and (
@@ -166,6 +248,10 @@ def main(argv: list[str] | None = None) -> int:
     validate = commands.add_parser("validate-request", help="Validate prompts locally without credits")
     validate.add_argument("--kind", required=True, choices=("character", "motion"))
     validate.add_argument("--file", required=True, type=Path)
+    deliver = commands.add_parser("deliver", help="Copy exact saved assets to a fresh exports folder; no generation")
+    deliver.add_argument("--character", required=True)
+    deliver.add_argument("--motion", required=True)
+    deliver.add_argument("--clip", type=int, default=0)
     commands.add_parser("library")
     commands.add_parser("builds")
     status = commands.add_parser("status")
@@ -180,6 +266,18 @@ def main(argv: list[str] | None = None) -> int:
             return doctor(args.require_generation)
         if args.command == "validate-request":
             print(json.dumps(validate_request_file(args.file, args.kind), indent=2))
+            return 0
+        if args.command == "deliver":
+            from castsmith.config import Settings
+            from castsmith.store import SQLiteStore, StoreError
+            from castsmith.workflow import BuildWorkflow
+
+            try:
+                workflow = BuildWorkflow(SQLiteStore(Settings.from_env().state_root))
+                result = deliver_assets(workflow, ROOT / "exports", args.character, args.motion, args.clip)
+            except StoreError as error:
+                raise ValueError(str(error)) from error
+            print(json.dumps(result, indent=2))
             return 0
         if args.command == "mcp":
             from castsmith.server import main as serve

@@ -8,8 +8,8 @@
   <style>
     :root { color-scheme: dark; font-family: "Segoe UI", sans-serif; background: #101512; color: #edf1ee; }
     * { box-sizing: border-box; }
-    body { margin: 0; }
-    main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; height: 100dvh; padding: 8px; }
+    body { margin: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100dvh; }
+    main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; padding: 8px; }
     section, .comparisons { min-width: 0; min-height: 0; }
     #motion { grid-column: 1 / -1; }
     .comparisons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; height: 100%; }
@@ -23,6 +23,11 @@
     .error:empty { display: none; }
     #page-error { position: fixed; z-index: 2; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    footer { padding: 8px 16px 12px; border-top: 1px solid #35443b; font-size: 12px; }
+    #asset-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 0; padding: 0; list-style: none; }
+    #asset-links a { color: #b8dbb5; text-underline-offset: 3px; }
+    #asset-links a:focus-visible { outline: 2px solid #b8dbb5; outline-offset: 3px; }
+    #asset-note { margin: 8px 0 0; color: #a3b0a8; line-height: 1.6; }
   </style>
   <script type="importmap">
     {"imports":{"three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/"}}
@@ -47,6 +52,10 @@
     </div>
   </section>
 </main>
+<footer aria-label="游戏资产下载">
+  <ul id="asset-links"></ul>
+  <p id="asset-note">暂无可下载资产。生成完成后，当前预览版本的下载链接会显示在这里。</p>
+</footer>
 <script type="module" src="/static/preview.js"></script>
 </body>
 </html>

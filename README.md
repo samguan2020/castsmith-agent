@@ -113,12 +113,43 @@ host. Claude Code and other platforms need separate integration testing.
 ### Creation and authorization handoffs
 
 After a design, the agent proactively offers to create the character, including
-the Tripo credit notice. After appearance confirmation, it shows the free
-RigTest before requesting review. When a motion is intended, it offers
-SayMotion authorization for the saved motion instead of waiting for a separate
-user request. Binding acceptance and paid permission are independent choices;
-they can share one confirmation form. Permission already granted for an
-unchanged draft is not requested again.
+the Tripo credit notice. Decisions are requested directly in chat:
+请输入“同意”，或告诉我需要修改什么。
+There are no confirmation forms, numbered-answer requirements or explanations
+about unavailable buttons. A clear natural-language affirmative is also valid.
+The preview remains read-only; decisions stay in chat.
+
+Character and motion requirements are captured together. The motion's name,
+description, duration and loop are kept in a validated session-local request;
+the paid character draft still uses `motions: []`. The agent does not ask for
+an unchanged motion again at the next stage.
+
+**Current engine limitation:** the pinned engine rejects RigTest until the
+user accepts the exact character's appearance. Character generation therefore
+opens an appearance question first; acceptance automatically starts/reuses the
+free RigTest without a separate test-permission question. Showing character
+and RigTest together *before* any appearance decision requires an upstream
+engine change. The agent must not fabricate acceptance to achieve this.
+
+The exact character-and-RigTest preview is opened with browser tools and checked
+for loading and advancing animation. When automation is unavailable, an explicit
+user report that the exact test is visible and playing is human evidence, not
+an agent-verified result. Binding acceptance and SayMotion credit permission
+use one explicitly scoped chat confirmation: before asking, the agent explains
+that agreement accepts the exact binding result and disclosed risks, and
+authorizes the saved motion's potential SayMotion credit use. A single
+affirmative to that combined scope supplies both decisions; a partial
+affirmative supplies only the named decision. Their records remain separate.
+Permission already granted for an
+unchanged draft is not requested again. Once both choices are affirmative, the
+agent starts the saved motion immediately without another "continue" prompt.
+
+After generation, the agent opens the pinned source/adapted comparison,
+automatically copies the saved assets to a fresh `exports/` subfolder and offers
+downloads plus a modification question. Delivery does not wait for final
+quality acceptance or silently mark a result accepted. New paid revisions
+still need permission. Restart/reselect the agent in a new chat after changing
+its configuration; an existing session may retain previous instructions and tools.
 
 An unavailable or unanswered confirmation is not permission. The agent leaves
 one concise next action and pauses rather than repeating internal tool messages
@@ -180,7 +211,29 @@ with `data-state` and animation `data-time`/`data-progress` for verification.
 The server rejects POST requests; it
 cannot generate assets or record a review through this UI. Empty versions and
 missing/failed sources show explicit messages. Viewing does not call paid APIs.
-Generation, reviews and delivery/downloads remain in the agent workflow.
+Generation and reviews remain in the agent workflow. The footer provides
+downloads for the current character GLB/PNG/manifest and selected creative
+motion GLB, saved SayMotion source, quality report and motion manifest. Only
+artifacts actually listed for those exact versions are linked; RigTest is
+excluded. Downloads do not imply quality acceptance.
+
+Generated files live in `.castsmith/artifacts/<build-id>/`. The final character
+is `character.glb`; a creative clip uses `motion-<index>.glb` with its saved
+`source-motion-<index>.glb` and `quality-<index>.json`. This local state is
+untracked. The agent automatically makes a local handoff after motion generation.
+The same no-paid copying command can be run manually:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\studio.py deliver --character <character-build-id> --motion <motion-build-id> --clip 0
+```
+
+It verifies saved artifact sizes/hashes and copies the character, selected
+creative clip, available source/preview, manifests and required quality report
+into a new `exports/` subfolder, preserving build-specific filenames. It never
+overwrites earlier deliveries or includes RigTest as a game animation.
+`delivery.json` records exact IDs, clip, inventory and real review/quality state.
+The command copies existing artifacts only; it is not a new exporter or repair
+engine. Unreviewed generated files can be delivered with their warnings intact.
 
 Exact-version URLs use
 `/?character=<character-build-id>&rig=<rig-test-id>&motion=<motion-build-id>&clip=0&section=motion`.
@@ -237,7 +290,8 @@ npm test
 ```
 
 The suite checks the launcher, safe initialization, dependency provenance,
-customization contracts, exact prompt-length boundaries, a real stdio MCP
+customization/tool contracts, exact prompt-length boundaries, safe exact-version
+delivery and the engine's appearance-before-RigTest gate, a real stdio MCP
 handshake/draft/status flow, and real HTTP preview/renderer routes served against temporary state. It does not
 prove agent routing quality, paid provider access or asset visual quality.
 Behavioral prompts for manual agent acceptance are in

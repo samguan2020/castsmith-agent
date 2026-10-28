@@ -19,6 +19,10 @@ without opening a store or contacting providers. Their availability and exact
 1024/1000-character boundaries are covered by compatibility tests.
 The MCP configuration explicitly selects the workspace interpreter and state.
 Web and MCP share SQLite and artifacts; do not write their internals from skills.
+The deliver command reads exact builds through BuildWorkflow.get and copies
+their existing artifacts to a fresh exports subfolder after size/hash checks.
+It preserves build IDs, reports and actual review state, writes no engine state,
+and does not implement a provider, renderer, retargeter or format exporter.
 
 | Engine MCP tool | Intended use |
 |---|---|
@@ -42,6 +46,12 @@ engine tools. Doctor exposes a local capability summary, not a new MCP API.
 Check appearance approval and binding preflight before paid motions.
 Automatic screening and human acceptance remain separate.
 No skill may supply a human decision based on its own assessment.
+The pinned BuildWorkflow.create_local(rig_test=True) rejects characters without
+appearance acceptance, as does motion_create. Automatic RigTest immediately
+after generation and before any appearance decision is therefore unsupported.
+Do not use a fabricated appearance review to bypass this engine requirement.
+After a real appearance decision, the free test starts automatically without
+a separate permission question.
 Binding/adaptation feedback may create an awaiting-repair record; it is not a
 successful repair. Reprocessing reuses inputs and does not promise improvement.
 
@@ -49,6 +59,17 @@ Offer creation immediately after a design (unless design-only was requested).
 Before paid motions, display the exact free binding exercise and proactively
 offer the saved motion's SayMotion authorization. Review and permission are
 independent; retain permission already provided for the unchanged request.
+Capture and validate intended motion requirements at the initial brief; do not
+ask for the same action again after binding review. Ask directly in chat:
+请输入“同意”，或告诉我需要修改什么。
+Do not require confirmation forms, numbered answers or explanations of
+unavailable controls. When both binding review and payment permission are
+pending, explain that agreement accepts the exact test and disclosed risks
+and authorizes the saved motion's potential SayMotion credit use. One
+affirmative to this explicitly combined scope records both decisions,
+independently; a partial affirmative records only its stated scope.
+Start the saved motion immediately when both are explicit. A yes to a clearly
+scoped question needs no special phrase.
 An unavailable-user response is no decision. Pause once, without repeated
 internal error text or automated-continuation loops.
 
@@ -67,6 +88,11 @@ the adapter does not read or write SQLite internals. Version URLs pin character,
 rig, motion and clip, with an optional section to scroll into view. A requested
 version from another character is an explicit error. Merely opening a tab or
 receiving /api/health is not proof that the intended preview loaded visibly.
+The agent allowlist includes integrated browser tools for this verification.
+If automation is unavailable, an explicit user report of visible playback is
+human evidence, not fabricated agent evidence. After motion generation, open
+the exact comparison and deliver existing files automatically; final quality
+acceptance is separate and modifications remain available.
 
 Prompt preflight precedes draft creation and credit requests. Validate the final
 Tripo prompt, including engine-appended constraints, not just description length.

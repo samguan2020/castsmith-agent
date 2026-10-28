@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { artifactUrl, characters, choose, clips } from "../web/preview.js";
+import { artifactUrl, characters, choose, clips, downloadEntries } from "../web/preview.js";
 
 function build(id, extra = {}) {
   return {
@@ -47,6 +47,31 @@ test("artifact paths are encoded", () => {
   assert.equal(artifactUrl("a/b", "motion 0.glb"), "/api/builds/a%2Fb/artifacts/motion%200.glb");
 });
 
+test("downloads include only saved artifacts for the pinned creative clip", () => {
+  const character = build("c1", {
+    artifacts: [{ name: "character.glb" }, { name: "preview.png" }, { name: "manifest.json" }],
+  });
+  const motion = animation("m1", "c1");
+  motion.artifacts = ["motion-0.glb", "motion-1.glb", "source-motion-1.glb", "quality-1.json", "manifest.json"]
+    .map(name => ({ name }));
+  const entries = downloadEntries(character, { build: motion, index: 1 });
+  assert.equal(entries.length, 7);
+  assert.ok(entries.some(entry => entry.url === "/api/builds/c1/artifacts/character.glb"));
+  assert.ok(entries.some(entry => entry.url === "/api/builds/m1/artifacts/motion-1.glb"));
+  assert.ok(entries.some(entry => entry.url === "/api/builds/m1/artifacts/source-motion-1.glb"));
+  assert.ok(entries.every(entry => !entry.url.endsWith("/motion-0.glb")));
+  assert.ok(entries.every(entry => entry.buildId === "c1" || entry.buildId === "m1"));
+});
+
+test("downloads exclude missing artifacts and refuse RigTest or unrelated characters", () => {
+  const character = build("c1");
+  assert.deepEqual(downloadEntries(), []);
+  assert.equal(downloadEntries(character).length, 1);
+  assert.equal(downloadEntries(character, { build: animation("m1", "c1"), index: 0 }).length, 2);
+  assert.throws(() => downloadEntries(character, { build: animation("r1", "c1", "rig_test"), index: 0 }), /RigTest/);
+  assert.throws(() => downloadEntries(character, { build: animation("m2", "c2"), index: 0 }), /当前人物/);
+});
+
 test("preview is a two-by-two grid with window introductions and no controls", async () => {
   const html = await readFile(new URL("../web/index.html", import.meta.url), "utf8");
   assert.equal((html.match(/<section /g) || []).length, 3);
@@ -63,5 +88,7 @@ test("preview is a two-by-two grid with window introductions and no controls", a
   assert.match(html, /这不是舞蹈动作/);
   assert.match(html, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(html, /grid-template-rows: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.doesNotMatch(html, /<(?:form|textarea|label|select|button|input|output|header|footer)\b|\/start|paid_confirmed/);
+  assert.ok(html.includes('<footer aria-label="游戏资产下载">'));
+  assert.ok(html.includes('<ul id="asset-links">'));
+  assert.doesNotMatch(html, /<(?:form|textarea|label|select|button|input|output|header)\b|\/start|paid_confirmed/);
 });

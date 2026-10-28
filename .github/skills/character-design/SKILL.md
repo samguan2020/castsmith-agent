@@ -14,6 +14,10 @@ description: "Design or revise a game character concept and production brief. Us
 4. Produce a concise brief: asset ID, appearance description, intended motions,
    constraints, assumptions and acceptance criteria. Prefer lowercase letters,
    digits and hyphens, at most 15 characters, for new asset and motion names.
+   Capture any motion already requested in a separate session-local request
+   with name, description, duration_seconds and loop. State ordinary defaults
+   and validate it with --kind motion; do not put it in the character draft or
+   ask for the same requirements again after RigTest.
 5. Before saving, run studio.py validate-request --kind character --file
    <request.json> with the complete character-only request, using the workspace
    interpreter. It checks the 1024-character final prompt INCLUDING the engine's
@@ -23,9 +27,10 @@ description: "Design or revise a game character concept and production brief. Us
    user wants it persisted. A draft is not a completed character and costs nothing.
 
 7. Return the brief and any draft ID, then proactively offer to start creation
-   with the host's confirmation tool. Include Tripo and potential API credit use
+   directly in chat: 请输入“同意”，或告诉我需要修改什么。
+   Do not mention confirmation buttons or require a form. Include Tripo and potential API credit use
    so an explicit yes can authorize this exact brief; do not invent a price.
    If the user asked for design only or no payment, respect that scope instead.
 8. Move to character-build after the user's actual creation decision. A saved
-   brief or an unanswered form is not consent. If the user is unavailable,
+   brief or an unanswered question is not consent. If the user is unavailable,
    leave one concise next action and pause without repeating the request.

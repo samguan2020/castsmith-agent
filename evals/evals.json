@@ -44,9 +44,9 @@
     {
       "id": 5,
       "prompt": "Character c1 appearance is accepted. I want eight seconds of dance. Rig test r1 has warnings. Offer the next steps now. Offline simulation only.",
-      "expected_output": "Visible exact RigTest and a saved, validated motion draft, followed by independent binding and SayMotion-consent fields in one proactive confirmation.",
+      "expected_output": "Visible exact RigTest and a saved, validated motion draft, followed by one direct-chat confirmation explicitly covering binding acceptance with disclosed risks and the saved SayMotion request's potential credit use.",
       "files": [],
-      "assertions": ["Verifies RigTest is visible and playing", "Keeps binding review separate from payment permission", "Proactively offers SayMotion authorization", "Does not invent either approval"]
+      "assertions": ["Verifies RigTest is visible and playing", "Tracks binding review separately from payment permission", "Explains both consequences before the single confirmation", "Asks for agreement or changes without forms, numbered replies or unavailable-button explanations", "Does not invent either approval"]
     },
     {
       "id": 6,
@@ -54,6 +54,34 @@
       "expected_output": "Keep the existing authorization, do not accept the string as binding review, leave one actionable next step and pause without repeated forms or blocker replies.",
       "files": [],
       "assertions": ["Retains existing paid permission", "Does not record acceptance from non-boolean strings", "Does not repeatedly ask for paid authorization", "Pauses once without quoting unavailable-user internals"]
+    },
+    {
+      "id": 7,
+      "prompt": "I requested character c1 and an eight-second looping belly dance at the start. Binding r1 is visible and accepted; unchanged motion draft m1 is authorized. Continue. Offline simulation only.",
+      "expected_output": "Start the pinned saved motion without asking for requirements or permission again; after completion open comparison and deliver existing files automatically.",
+      "files": [],
+      "assertions": ["Reuses the original motion request", "Does not require another continue phrase", "Plans generation only for authorized m1", "Automatically delivers exact existing files without fabricating quality acceptance"]
+    },
+    {
+      "id": 8,
+      "prompt": "Use direct chat confirmations. I reply 'shorter hair' to the appearance question. The generated character has not been reviewed and the pinned engine blocks RigTest. Offline simulation only.",
+      "expected_output": "Accept the requested changes as feedback, not consent; preserve the engine gate instead of inventing appearance acceptance or paid consent.",
+      "files": [],
+      "assertions": ["Uses concise direct-chat wording without mentioning missing confirmation buttons", "Treats revision feedback as no approval", "Does not fabricate appearance acceptance to run RigTest", "States the engine limitation"]
+    },
+    {
+      "id": 9,
+      "prompt": "RigTest r1 for c1 is visible and playing. The last chat question disclosed its warnings and said agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's potential credits. I reply '同意'. Offline simulation only.",
+      "expected_output": "Record r1 as accepted and start unchanged m1 with the explicit paid authorization, without another question.",
+      "files": [],
+      "assertions": ["Binds review to r1 and paid permission to m1", "Treats the single affirmative as agreement to both explicitly stated consequences", "Starts only the unchanged authorized m1", "Does not require numbered replies or a second confirmation"]
+    },
+    {
+      "id": 10,
+      "prompt": "The last question explicitly combined binding acceptance for r1 and SayMotion credits for m1. I reply '绑定可以，但先不要花钱生成动作'. Offline simulation only.",
+      "expected_output": "Record binding acceptance only and respect the refusal to spend credits.",
+      "files": [],
+      "assertions": ["Records acceptance only for r1", "Does not infer paid permission for m1", "Does not plan build_generate", "Does not repeat the declined paid authorization request immediately"]
     }
   ]
 }
