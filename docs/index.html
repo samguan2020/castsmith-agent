@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CastSmith 真实制作案例：从聊天需求、角色迭代和绑定测试，到 8 秒健美操动画。直接观看 MP4，无需启动本地服务。">
+  <meta name="color-scheme" content="dark">
+  <title>CastSmith · 从一句话到健美操角色</title>
+  <style>
+    :root { color-scheme: dark; --bg: #101512; --panel: #18201b; --line: #334439; --ink: #edf4ed; --muted: #a9b9ad; --accent: #c5eea0; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.8; }
+    a { color: var(--accent); text-underline-offset: 4px; }
+    a:hover { color: white; }
+    a:focus-visible, summary:focus-visible, video:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    .skip { position: absolute; top: -100px; left: 16px; padding: 8px; background: var(--panel); z-index: 1; }
+    .skip:focus { top: 8px; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+    header { border-bottom: 1px solid var(--line); }
+    nav { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 20px; }
+    .brand { color: var(--ink); font-size: 19px; font-weight: 750; text-decoration: none; letter-spacing: -.5px; }
+    .brand span { color: var(--accent); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 22px; font-size: 14px; }
+    .nav-links a { text-decoration: none; color: var(--muted); }
+    .hero { padding: 76px 0 42px; }
+    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 3px; font-size: 12px; font-weight: 700; }
+    h1 { font-size: clamp(36px, 6vw, 68px); line-height: 1.2; letter-spacing: -2px; margin: 18px 0 22px; }
+    h1 span { color: var(--accent); }
+    .lead { max-width: 760px; font-size: 18px; color: var(--muted); }
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .tag { border: 1px solid var(--line); border-radius: 30px; padding: 4px 13px; font-size: 12px; color: var(--muted); }
+    section { scroll-margin-top: 24px; padding-block: 36px; }
+    h2 { font-size: 29px; line-height: 1.3; letter-spacing: -.7px; margin: 0 0 14px; }
+    h3 { font-size: 19px; margin: 0 0 9px; }
+    p { margin: 0 0 16px; }
+    .muted, figcaption { color: var(--muted); }
+    .video-frame { background: #080d09; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+    video { display: block; width: 100%; aspect-ratio: 4 / 3; background: #101512; }
+    .video-note { padding: 16px 22px; border-top: 1px solid var(--line); font-size: 14px; }
+    .video-note p:last-child { margin: 0; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+    .stat { border-top: 1px solid var(--line); padding: 18px 0; }
+    .stat strong { display: block; font-size: 27px; color: var(--accent); }
+    .stat span { font-size: 13px; color: var(--muted); }
+    .quote { border-left: 3px solid var(--accent); margin: 0; padding: 16px 24px; background: var(--panel); border-radius: 0 12px 12px 0; font-size: 19px; }
+    .quote small { display: block; color: var(--muted); font-size: 13px; margin-top: 10px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    figure { margin: 0; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; overflow: hidden; }
+    figure img { display: block; width: 100%; aspect-ratio: 1.25; object-fit: contain; background: #121a16; }
+    figcaption { font-size: 14px; padding: 16px 20px; }
+    figcaption strong { display: block; color: var(--ink); font-size: 16px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0; list-style: none; counter-reset: step; }
+    .steps li { counter-increment: step; border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: var(--panel); }
+    .steps li::before { content: "0" counter(step); color: var(--accent); font-size: 13px; letter-spacing: 2px; display: block; margin-bottom: 16px; }
+    .steps p { font-size: 14px; color: var(--muted); margin: 0; }
+    details { border: 1px solid var(--line); border-radius: 12px; margin: 12px 0; background: var(--panel); }
+    summary { cursor: pointer; font-weight: 650; padding: 18px 22px; }
+    .dialogue { padding: 0 22px 10px; }
+    .dialogue p { border-left: 2px solid var(--line); padding-left: 16px; font-size: 15px; }
+    .dialogue strong { color: var(--accent); }
+    .notice { border: 1px solid #6d6242; border-radius: 12px; background: #242319; padding: 24px; }
+    .notice h3 { color: #eee0ad; }
+    .notice ul { padding-left: 22px; margin-bottom: 0; }
+    .builds { display: grid; grid-template-columns: 130px 1fr; gap: 12px 20px; border: 1px solid var(--line); border-radius: 12px; padding: 22px; font-size: 14px; }
+    dt { color: var(--muted); }
+    dd { margin: 0; min-width: 0; }
+    code { overflow-wrap: anywhere; color: #d7e7d0; font-size: 12px; }
+    footer { border-top: 1px solid var(--line); margin-top: 35px; padding: 28px 0 42px; font-size: 13px; color: var(--muted); }
+    @media (max-width: 700px) {
+      .hero { padding-top: 44px; }
+      .grid, .steps { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .builds { grid-template-columns: 1fr; gap: 4px; }
+      dd { margin-bottom: 12px; }
+      .nav-links { gap: 12px; }
+      .wrap { width: calc(100% - 28px); }
+      .video-note { padding: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header>
+    <nav class="wrap" aria-label="主导航">
+      <a class="brand" href="./">CastSmith<span> / Studio</span></a>
+      <div class="nav-links">
+        <a href="#demo">观看视频</a>
+        <a href="#conversation">制作对话</a>
+        <a href="https://github.com/samguan2020/castsmith-agent">GitHub ↗</a>
+      </div>
+    </nav>
+  </header>
+  <main id="main" class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Real session / 2026.10.27</div>
+      <h1>一句话，<br>让<span>角色动起来。</span></h1>
+      <p class="lead">从黑色马尾、白色运动裤的角色设想，到外观迭代、绑定测试和健美操动画。
+        这是一次真实的聊天驱动制作，不是产品概念稿。</p>
+      <div class="tags"><span class="tag">Copilot 对话驱动</span><span class="tag">Tripo 角色</span><span class="tag">SayMotion 动作</span><span class="tag">每次付费均经用户授权</span></div>
+    </div>
+
+    <section id="demo" aria-labelledby="demo-title">
+      <h2 id="demo-title">直接观看，不需要本地服务。</h2>
+      <p class="muted">MP4 记录了实际角色、免费绑定测试，以及同步的适配后动作与源动作。点击播放即可观看。</p>
+      <div class="video-frame">
+        <video controls playsinline loop preload="metadata"
+          poster="examples/ponytail-aerobics/images/studio-overview.png"
+          aria-label="CastSmith 四窗口制作演示，无音频：人物预览、绑定测试、角色健美操与 SayMotion 源动作">
+          <source src="examples/ponytail-aerobics/media/castsmith-aerobics.mp4" type="video/mp4">
+          你的浏览器不支持嵌入视频，请使用下方 MP4 下载链接。
+        </video>
+        <div class="video-note">
+          <p>16.2 秒 · 1280 × 960 · 30 fps · H.264 MP4 · 无音频</p>
+          <p>录制实际预览画布并排成四窗口，标题为录制时叠加；不含桌面或聊天界面。
+            约两轮 8 秒动作，开始点不一定是动作第 0 秒。
+            <a href="examples/ponytail-aerobics/media/castsmith-aerobics.mp4" download>下载 MP4</a></p>
+        </div>
+      </div>
+      <div class="stats" aria-label="案例概况">
+        <div class="stat"><strong>2</strong><span>保留血缘的角色候选</span></div>
+        <div class="stat"><strong>8 秒</strong><span>健美操动作时长</span></div>
+        <div class="stat"><strong>4</strong><span>实际模型预览窗口</span></div>
+        <div class="stat"><strong>已交付</strong><span>本地文件完整性校验通过</span></div>
+      </div>
+    </section>
+
+    <section aria-label="用户反馈">
+      <blockquote class="quote">“这个例子运行的非常成功。”
+        <small>用户在完成角色与动作交付后给出的反馈。流程成功不代表所有质量警告已消除。</small>
+      </blockquote>
+    </section>
+
+    <section aria-labelledby="workflow-title">
+      <h2 id="workflow-title">从需求到交付，决定留在聊天里。</h2>
+      <ol class="steps">
+        <li><h3>一起收集角色与动作</h3><p>黑色马尾、白色紧身运动长裤、健美操。明确采用 20–25 岁成年女性设定，保存 8 秒原地循环动作。</p></li>
+        <li><h3>生成第一版角色</h3><p>校验需求、披露 Tripo 积分使用，经用户同意后生成。打开精确版本，让用户检查外观。</p></li>
+        <li><h3>反馈驱动外观迭代</h3><p>“身材再纤细一点，面容再美丽一点。”创建第二版，重新取得付费授权，原版保留。</p></li>
+        <li><h3>自动运行免费绑定测试</h3><p>用户接受第二版外观后，选定该版本并运行本地 RigTest，检查模型加载和动画时间推进。</p></li>
+        <li><h3>生成已保存的健美操</h3><p>披露绑定风险，经用户同时接受绑定结果、授权指定 SayMotion 请求后立即生成，不再重复询问动作需求。</p></li>
+        <li><h3>对照预览与文件交付</h3><p>显示源动作和适配结果。交付角色、动作、源动作、清单与报告，校验大小和 SHA-256。交付不等于验收。</p></li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="versions-title">
+      <h2 id="versions-title">一次具体反馈，一份保留原版的迭代。</h2>
+      <p class="muted">下面是原工作区里的真实截图。镜头角度不同，不构成同角度体型测量或自动美观评分。</p>
+      <div class="grid">
+        <figure><img src="examples/ponytail-aerobics/images/character-v1.png" alt="第一版角色的实际预览，黑色束发、浅蓝上衣与白色运动裤" loading="lazy"><figcaption><strong>第一版 / 外观初稿</strong>用户检查后要求身材更纤细、面容更精致。</figcaption></figure>
+        <figure><img src="examples/ponytail-aerobics/images/character-v2.png" alt="用户接受的第二版角色外观，保留黑色马尾与原运动服装" loading="lazy"><figcaption><strong>第二版 / 用户接受的外观</strong>更纤细的身形、更精致的五官；不覆盖原版本。</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="conversation" aria-labelledby="conversation-title">
+      <h2 id="conversation-title">制作对话</h2>
+      <p class="muted">用户原话与助手阶段答复的整理版，不是逐字完整日志。省略工具输出和自动继续提醒；
+        <a href="https://github.com/samguan2020/castsmith-agent/blob/main/docs/examples/ponytail-aerobics/conversation.md">阅读详细对话归档 ↗</a></p>
+      <details open><summary>01 / 从一句自然语言开始</summary><div class="dialogue">
+        <p><strong>用户</strong><br>生成一个青春少女，梳着黑色的马尾辫，穿着白色紧身裤，跳健美操</p>
+        <p><strong>助手</strong><br>明确成年年轻女性设定，保存角色与 8 秒循环健美操需求。先生成角色，再做免费绑定测试和动作。本次只请求 Tripo 角色生成授权，可能消耗积分。</p>
+        <p><strong>用户</strong><br>同意</p>
+      </div></details>
+      <details><summary>02 / 看完第一版，提出明确修改</summary><div class="dialogue">
+        <p><strong>助手</strong><br>角色已生成，精确版本预览已加载；结构检查通过。请检查马尾、脸型和服装。此时健美操尚未生成。</p>
+        <p><strong>用户</strong><br>身材再纤细一点，面容再美丽一点</p>
+        <p><strong>助手</strong><br>将身形调整得纤细匀称，采用更精致、柔和的五官，保留成年设定、马尾和服装。修订稿通过本地校验；第二次 Tripo 生成可能再次消耗积分，原版保留。</p>
+        <p><strong>用户</strong><br>同意</p>
+      </div></details>
+      <details><summary>03 / 接受第二版外观，自动测试绑定</summary><div class="dialogue">
+        <p><strong>助手</strong><br>第二版已生成并显示。结构检查通过；动态绑定和衣物碰撞尚未验证。本次确认只接受第二版外观，确认后自动进行免费绑定测试。</p>
+        <p><strong>用户</strong><br>同意</p>
+        <p><strong>助手</strong><br>已记录外观接受。免费 RigTest 已完成，预览已加载且时间从约 3.98 秒推进到 5.18 秒；测试有可能脚滑警告，仍需人工观察关节变形。</p>
+      </div></details>
+      <details><summary>04 / 披露风险，授权这一段动作</summary><div class="dialogue">
+        <p><strong>助手</strong><br>已保存 8 秒循环原地健美操：左右踏步摆臂、交替提膝和向上伸臂。说明本次同意同时接受绑定结果及已披露风险，并授权该指定 SayMotion 请求的潜在积分使用。</p>
+        <p><strong>用户</strong><br>同意</p>
+        <p><strong>助手</strong><br>记录绑定决定并开始生成，不重新生成角色，也不再次询问不变的动作规格。</p>
+      </div></details>
+      <details><summary>05 / 实际生成、对照预览、交付</summary><div class="dialogue">
+        <p><strong>助手</strong><br>8 秒动作已生成并导出。源动作和适配后角色均已加载、同步循环播放。复制文件并校验哈希；披露脚滑、旋转突变、蒙皮拉伸及循环接缝警告，未声称已自动修复。</p>
+        <p><strong>用户</strong><br>这个例子运行的非常成功。我已经commit and push the change to github reop。现在帮我把这个chat session，以及生成的这个UI里的显示内容，生成一个page，放到github里去</p>
+      </div></details>
+      <details><summary>06 / 将本地成果变成远程可看的页面</summary><div class="dialogue">
+        <p><strong>用户</strong><br>可以把项目变成public，然后生成repo的page。本地的网页不能在远程打开，需要保存成mp4文件，镶嵌在page里</p>
+        <p><strong>本页</strong><br>公开仓库与 GitHub Pages 使用同一份静态站点。视频是录制后的 MP4，不依赖 localhost、3D 服务或提供方账号；没有新增付费生成。</p>
+      </div></details>
+    </section>
+
+    <section aria-labelledby="quality-title">
+      <h2 id="quality-title">结果可看，风险也应该可见。</h2>
+      <div class="notice">
+        <h3>结构通过 ≠ 质量无瑕</h3>
+        <p>机器报告仍为 <code>needs_review</code>。交付时动作验收记录为 <code>pending</code>，
+          本次网页归档没有改写任何资产验收状态。</p>
+        <ul>
+          <li>存在可能脚滑、蒙皮拉伸和循环接缝速度不连续警告。</li>
+          <li>适配后约 3.1–5.8 秒有旋转突变警告；源动作也有少量此类警告，适配后更多，原因未确定。</li>
+          <li>衣物穿模、动作语义、真实接触、蒙皮权重正确性和游戏引擎导入效果尚未验证。</li>
+          <li>未声称实现通用蒙皮修复、IK 锁脚或碰撞修复。视频不表示这些问题已消失。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="evidence-title">
+      <h2 id="evidence-title">对应到这一次，而不是一个泛化演示。</h2>
+      <dl class="builds">
+        <dt>第一版角色</dt><dd><code>build-0a76836facf64f6db191e6936af2b106</code></dd>
+        <dt>第二版角色</dt><dd><code>build-5b37f1acc8314ac7a93c004958011ea0</code></dd>
+        <dt>免费绑定测试</dt><dd><code>build-e4a5fa7169924efb816ed57fa2e22189</code></dd>
+        <dt>健美操 / 片段 0</dt><dd><code>build-6f8df30edd4a45c9a6323b6b1bd8e2be</code></dd>
+      </dl>
+      <p class="muted">发布的是文档、截图和演示 MP4。凭据、数据库、原始 GLB 与完整质量报告仍保留在原工作区，
+        没有作为网页资产公开。<a href="https://github.com/samguan2020/castsmith-agent/blob/main/docs/examples/ponytail-aerobics/README.md">查看案例记录与交付说明 ↗</a></p>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      <p>CastSmith / Agent-first character production · <a href="https://github.com/samguan2020/castsmith-agent">项目仓库</a></p>
+      <p>此项目壳已公开；固定版本的执行引擎依赖仍为私有，安装仍需授权访问上游仓库。
+        本页可独立观看，不运行生成引擎，不调用付费服务，也不收集访问者数据。</p>
+    </div>
+  </footer>
+</body>
+</html>

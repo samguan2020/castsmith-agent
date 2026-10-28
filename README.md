@@ -13,8 +13,9 @@ You supply your own Tripo and SayMotion credentials.
 records a real session: two character candidates, appearance feedback, a free
 binding test, an eight-second SayMotion animation and verified local delivery.
 It includes actual UI screenshots, the production conversation and disclosed
-quality warnings. The page is a static archive, not a hosted 3D viewer;
-generated models and credentials remain local.
+quality warnings. [Watch the recorded MP4 on GitHub Pages](https://samguan2020.github.io/castsmith-agent/):
+the video plays remotely without a local service. The site is a static archive,
+not a hosted 3D viewer; original models and credentials remain local.
 
 ## Status and repository boundary
 
@@ -26,9 +27,10 @@ copied into this repository. A small read-only presentation shell uses the
 installed engine's MotionViewer and artifact APIs. Engine fixes belong upstream;
 update the dependency pin only after compatibility tests.
 
-**Both repositories are currently private.** Installation requires access to both.
-This is not yet a publicly installable distribution. Making this repository
-public alone will not make its private dependency available.
+**This product-shell repository is public; its pinned execution-engine dependency
+is still private.** Installation requires authorized access to that upstream
+repository. This is not yet a publicly installable distribution; the public
+showcase does not grant access to the private dependency.
 
 | Works through the existing engine | Not implemented in this release |
 |---|---|
