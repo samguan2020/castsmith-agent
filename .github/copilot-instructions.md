@@ -8,6 +8,8 @@ Never read or reveal .env, copy credentials or generated assets from other
 workspaces, or submit paid operations without the user's explicit approval.
 Keep local assets in .castsmith and exports in exports; both are untracked.
 Read castsmith.project.json for project preferences. Preserve existing versions.
+Keep project-owned prompts, UI, documentation and examples in English.
+Use English for user-facing production handoffs.
 Current generation is synchronous; general-purpose automatic repair and durable
 background operation management are not shipped in this version.
 

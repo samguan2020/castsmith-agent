@@ -69,7 +69,7 @@ test("downloads exclude missing artifacts and refuse RigTest or unrelated charac
   assert.equal(downloadEntries(character).length, 1);
   assert.equal(downloadEntries(character, { build: animation("m1", "c1"), index: 0 }).length, 2);
   assert.throws(() => downloadEntries(character, { build: animation("r1", "c1", "rig_test"), index: 0 }), /RigTest/);
-  assert.throws(() => downloadEntries(character, { build: animation("m2", "c2"), index: 0 }), /当前人物/);
+  assert.throws(() => downloadEntries(character, { build: animation("m2", "c2"), index: 0 }), /current character/);
 });
 
 test("preview is a two-by-two grid with window introductions and no controls", async () => {
@@ -83,12 +83,13 @@ test("preview is a two-by-two grid with window introductions and no controls", a
     assert.ok(html.includes(`id="${id}-title">`));
   }
   assert.equal((html.match(/class="preview-copy"/g) || []).length, 4);
-  assert.match(html, /RigTest · 绑定测试/);
-  assert.match(html, /循环抬胳膊、抬腿/);
-  assert.match(html, /这不是舞蹈动作/);
+  assert.match(html, /<html lang="en">/);
+  assert.match(html, /RigTest · Binding Test/);
+  assert.match(html, /Arm and leg lifts loop automatically/);
+  assert.match(html, /This is not a dance/);
   assert.match(html, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(html, /grid-template-rows: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.ok(html.includes('<footer aria-label="游戏资产下载">'));
+  assert.ok(html.includes('<footer aria-label="Game asset downloads">'));
   assert.ok(html.includes('<ul id="asset-links">'));
   assert.doesNotMatch(html, /<(?:form|textarea|label|select|button|input|output|header)\b|\/start|paid_confirmed/);
 });

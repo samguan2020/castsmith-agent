@@ -27,7 +27,7 @@ description: "Create or revise a SayMotion animation and adapt it to an existing
    scoped confirmation explaining that agreement both accepts this binding
    result with its stated risks and authorizes the exact saved SayMotion
    request's potential credit use. End with:
-   请输入“同意”，或告诉我需要修改什么。
+   Please reply 'I agree', or tell me what you would like to change.
    Do not mention confirmation buttons, require a form or numbered answers.
    One affirmative to this explicitly combined scope records both decisions.
    A partial affirmative records only its stated scope. An existing explicit

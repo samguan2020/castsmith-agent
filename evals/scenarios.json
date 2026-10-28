@@ -83,13 +83,13 @@
     {
       "id": "single-combined-agreement",
       "skills": ["rig-diagnose", "motion-build"],
-      "prompt": "The visible RigTest r1 for c1 has disclosed warnings. The pending chat question explicitly says agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's credits. I reply: 同意.",
+      "prompt": "The visible RigTest r1 for c1 has disclosed warnings. The pending chat question explicitly says agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's credits. I reply: I agree.",
       "expected": ["Records binding acceptance for r1 only", "Retains the separate paid authorization for unchanged m1", "Immediately starts m1 without a second question", "Does not require numbered answers or invoke a confirmation form"]
     },
     {
       "id": "partial-combined-agreement",
       "skills": ["rig-diagnose", "motion-build"],
-      "prompt": "The pending question explicitly combines binding acceptance for r1 and SayMotion credits for m1. I reply: 绑定可以，但先不要花钱生成动作。",
+      "prompt": "The pending question explicitly combines binding acceptance for r1 and SayMotion credits for m1. I reply: The binding is fine, but do not spend credits generating motion yet.",
       "expected": ["Records only binding acceptance for r1", "Does not call build_generate for m1", "Does not infer paid permission", "Does not immediately pressure the user to authorize the declined paid operation"]
     }
   ]

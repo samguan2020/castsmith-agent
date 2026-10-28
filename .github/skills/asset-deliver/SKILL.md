@@ -32,7 +32,7 @@ description: "Deliver or download generated character and motion assets, includi
    Never overwrite an existing delivery or modify a game project automatically.
 7. Provide the local folder, direct downloads and a short modification offer.
    Explain that agreement keeps the result, then ask directly in chat:
-   请输入“同意”，或告诉我需要修改什么。
+   Please reply 'I agree', or tell me what you would like to change.
    Do not mention confirmation buttons or require a form.
    Files remain available before the final quality decision. Revised paid
    requests need fresh consent; preserve all earlier versions.

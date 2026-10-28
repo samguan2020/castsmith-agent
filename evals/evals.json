@@ -71,14 +71,14 @@
     },
     {
       "id": 9,
-      "prompt": "RigTest r1 for c1 is visible and playing. The last chat question disclosed its warnings and said agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's potential credits. I reply '同意'. Offline simulation only.",
+      "prompt": "RigTest r1 for c1 is visible and playing. The last chat question disclosed its warnings and said agreement accepts r1 and authorizes the saved eight-second SayMotion draft m1's potential credits. I reply 'I agree'. Offline simulation only.",
       "expected_output": "Record r1 as accepted and start unchanged m1 with the explicit paid authorization, without another question.",
       "files": [],
       "assertions": ["Binds review to r1 and paid permission to m1", "Treats the single affirmative as agreement to both explicitly stated consequences", "Starts only the unchanged authorized m1", "Does not require numbered replies or a second confirmation"]
     },
     {
       "id": 10,
-      "prompt": "The last question explicitly combined binding acceptance for r1 and SayMotion credits for m1. I reply '绑定可以，但先不要花钱生成动作'. Offline simulation only.",
+      "prompt": "The last question explicitly combined binding acceptance for r1 and SayMotion credits for m1. I reply 'The binding is fine, but do not spend credits generating motion yet'. Offline simulation only.",
       "expected_output": "Record binding acceptance only and respect the refusal to spend credits.",
       "files": [],
       "assertions": ["Records acceptance only for r1", "Does not infer paid permission for m1", "Does not plan build_generate", "Does not repeat the declined paid authorization request immediately"]

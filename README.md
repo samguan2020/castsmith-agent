@@ -7,9 +7,14 @@ Describe a character or a motion in chat. The agent uses the CastSmith engine to
 create, inspect and iterate assets; the browser shows the character and animation.
 You supply your own Tripo and SayMotion credentials.
 
+Project-owned agent prompts, skills, confirmation wording, UI and documentation
+are in English. Archived conversation excerpts are English translations, not
+verbatim transcripts. Original build records and third-party engine messages
+are preserved rather than rewritten by this presentation shell.
+
 ## Recorded example
 
-[From chat to an aerobics character (中文)](docs/examples/ponytail-aerobics/README.md)
+[From chat to an aerobics character](docs/examples/ponytail-aerobics/README.md)
 records a real session: two character candidates, appearance feedback, a free
 binding test, an eight-second SayMotion animation and verified local delivery.
 It includes actual UI screenshots, the production conversation and disclosed
@@ -125,7 +130,7 @@ host. Claude Code and other platforms need separate integration testing.
 
 After a design, the agent proactively offers to create the character, including
 the Tripo credit notice. Decisions are requested directly in chat:
-请输入“同意”，或告诉我需要修改什么。
+Please reply 'I agree', or tell me what you would like to change.
 There are no confirmation forms, numbered-answer requirements or explanations
 about unavailable buttons. A clear natural-language affirmative is also valid.
 The preview remains read-only; decisions stay in chat.

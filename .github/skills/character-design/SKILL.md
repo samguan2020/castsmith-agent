@@ -27,7 +27,7 @@ description: "Design or revise a game character concept and production brief. Us
    user wants it persisted. A draft is not a completed character and costs nothing.
 
 7. Return the brief and any draft ID, then proactively offer to start creation
-   directly in chat: 请输入“同意”，或告诉我需要修改什么。
+   directly in chat: Please reply 'I agree', or tell me what you would like to change.
    Do not mention confirmation buttons or require a form. Include Tripo and potential API credit use
    so an explicit yes can authorize this exact brief; do not invent a price.
    If the user asked for design only or no payment, respect that scope instead.

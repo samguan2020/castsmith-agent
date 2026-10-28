@@ -61,7 +61,7 @@ offer the saved motion's SayMotion authorization. Review and permission are
 independent; retain permission already provided for the unchanged request.
 Capture and validate intended motion requirements at the initial brief; do not
 ask for the same action again after binding review. Ask directly in chat:
-请输入“同意”，或告诉我需要修改什么。
+Please reply 'I agree', or tell me what you would like to change.
 Do not require confirmation forms, numbered answers or explanations of
 unavailable controls. When both binding review and payment permission are
 pending, explain that agreement accepts the exact test and disclosed risks

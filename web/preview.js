@@ -27,7 +27,7 @@ export function artifactUrl(buildId, name) {
 export function downloadEntries(character, clip) {
   if (!character) return [];
   if (clip && (clip.build.kind === "rig_test" || clip.build.character_build_id !== character.id)) {
-    throw new Error("下载动作必须属于当前人物，且不能是 RigTest");
+    throw new Error("The downloaded motion must belong to the current character and must not be RigTest");
   }
   const entries = [];
   function add(build, files) {
@@ -38,22 +38,22 @@ export function downloadEntries(character, clip) {
     }
   }
   add(character, [
-    ["character.glb", "角色 GLB"],
-    ["preview.png", "角色预览 PNG"],
-    ["manifest.json", "角色清单"],
+    ["character.glb", "Character GLB"],
+    ["preview.png", "Character preview PNG"],
+    ["manifest.json", "Character manifest"],
   ]);
   if (clip) add(clip.build, [
-    [`motion-${clip.index}.glb`, "角色动作 GLB"],
-    [`source-motion-${clip.index}.glb`, "SayMotion 源动作 GLB"],
-    [`quality-${clip.index}.json`, "动作质量报告"],
-    ["manifest.json", "动作清单"],
+    [`motion-${clip.index}.glb`, "Character motion GLB"],
+    [`source-motion-${clip.index}.glb`, "SayMotion source GLB"],
+    [`quality-${clip.index}.json`, "Motion quality report"],
+    ["manifest.json", "Motion manifest"],
   ]);
   return entries;
 }
 
 export function choose(entries, requested, label) {
   if (requested && !entries.some(entry => entry.key === requested)) {
-    throw new Error(`${label}版本不存在、未完成或不属于当前人物：${requested}`);
+    throw new Error(`${label} version is missing, unfinished or does not belong to the current character: ${requested}`);
   }
   return requested || entries[0]?.key || "";
 }
@@ -100,7 +100,7 @@ export async function startPreview() {
         delete $(name + "-viewer").dataset.buildId;
         delete $(name + "-viewer").dataset.time;
         delete $(name + "-viewer").dataset.progress;
-        $(name + "-error").textContent = "此人物版本暂无可预览片段。";
+        $(name + "-error").textContent = "No preview clip is available for this character version.";
       });
     };
     state.load = async entry => {
@@ -133,7 +133,7 @@ export async function startPreview() {
           if (source && !hasArtifact(entry.build, `source-motion-${entry.index}.glb`)) {
             viewer.unload();
             $(name + "-viewer").dataset.state = "empty";
-            $(name + "-error").textContent = "此版本没有已保存的 SayMotion 原始动作。";
+            $(name + "-error").textContent = "This version has no saved SayMotion source motion.";
             return false;
           }
           const url = source
@@ -187,8 +187,8 @@ export async function startPreview() {
       return item;
     }));
     $("asset-note").textContent = entries.length
-      ? "下载当前预览版本；RigTest 不列入游戏资产。下载不代表质量验收；如需修改外观或动作，请在聊天中提出需求，旧版本会保留。"
-      : "暂无可下载资产。生成完成后，当前预览版本的下载链接会显示在这里。";
+      ? "Download the displayed versions; RigTest is excluded from game assets. Downloading is not quality acceptance. Request appearance or motion changes in chat; earlier versions are preserved."
+      : "No downloadable assets yet. Links for the displayed versions will appear here after generation.";
   }
 
   function updateUrl() {
@@ -210,11 +210,11 @@ export async function startPreview() {
       desired.character = entries.find(entry =>
         library.some(item => item.selected_build_id === entry.key))?.key || "";
     }
-    desired.character = choose(entries, desired.character, "人物");
+    desired.character = choose(entries, desired.character, "Character");
     const character = builds.find(build => build.id === desired.character);
     if (!desired.character) {
       $("character-viewer").dataset.state = "empty";
-      $("character-error").textContent = "尚无已完成的人物；请在聊天中创建。";
+      $("character-error").textContent = "No completed character yet. Create one in chat.";
     }
     if (shownCharacter !== desired.character) {
       shownCharacter = desired.character;
@@ -253,7 +253,7 @@ export async function startPreview() {
     try {
       const responses = await Promise.all(["/api/builds", "/api/library"].map(async path => {
         const response = await fetch(path, { cache: "no-store" });
-        if (!response.ok) throw new Error(`预览读取失败 (${response.status})：${path}`);
+        if (!response.ok) throw new Error(`Preview request failed (${response.status}): ${path}`);
         return response.json();
       }));
       builds = responses[0].builds;
@@ -282,6 +282,6 @@ export async function startPreview() {
 
 if (typeof document !== "undefined") {
   startPreview().catch(error => {
-    document.getElementById("page-error").textContent = `预览初始化失败：${error.message}`;
+    document.getElementById("page-error").textContent = `Preview initialization failed: ${error.message}`;
   });
 }

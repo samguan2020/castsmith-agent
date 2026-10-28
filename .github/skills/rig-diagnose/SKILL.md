@@ -37,7 +37,7 @@ description: "Check character binding and investigate shoulder, sleeve, elbow, k
    Reuse the initial motion specification instead of asking for it again.
    Explain that agreement both accepts this binding result with its stated risks
    and authorizes that exact motion's potential SayMotion credit use, then say:
-   请输入“同意”，或告诉我需要修改什么。
+   Please reply 'I agree', or tell me what you would like to change.
    Do not mention confirmation buttons, require a form or numbered answers.
    One affirmative to this explicitly combined scope records both decisions;
    a partial affirmative records only its stated scope. Once both are explicit,

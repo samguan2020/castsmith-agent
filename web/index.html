@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>CastSmith | 3D 预览</title>
+  <title>CastSmith | 3D Preview</title>
   <style>
     :root { color-scheme: dark; font-family: "Segoe UI", sans-serif; background: #101512; color: #edf1ee; }
     * { box-sizing: border-box; }
@@ -37,24 +37,24 @@
 <main>
   <p id="page-error" class="error" role="alert"></p>
   <section id="character" aria-labelledby="character-title">
-    <div class="preview-copy"><h2 id="character-title">人物 3D 预览</h2><p>查看角色外观与服装。拖动旋转，滚轮缩放。</p></div>
+    <div class="preview-copy"><h2 id="character-title">Character 3D Preview</h2><p>Inspect appearance and clothing. Drag to rotate; scroll to zoom.</p></div>
     <div id="character-viewer" class="viewport"><p id="character-error" class="error" role="alert"></p></div>
   </section>
   <section id="rig" aria-labelledby="rig-title">
-    <div class="preview-copy"><h2 id="rig-title">RigTest · 绑定测试</h2><p>角色会循环抬胳膊、抬腿。请观察肩、肘、髋、膝是否异常拉伸、扭曲，以及衣物是否穿模；这不是舞蹈动作。</p></div>
+    <div class="preview-copy"><h2 id="rig-title">RigTest · Binding Test</h2><p>Arm and leg lifts loop automatically. Check shoulders, elbows, hips and knees for stretching, twisting or clothing intersections. This is not a dance.</p></div>
     <div id="rig-viewer" class="viewport"><p id="rig-error" class="error" role="alert"></p></div>
   </section>
   <section id="motion" aria-labelledby="motion-title">
-    <h2 id="motion-title" class="sr-only">动作 3D 预览</h2>
+    <h2 id="motion-title" class="sr-only">Motion 3D Preview</h2>
     <div class="comparisons">
-      <div class="comparison"><div class="preview-copy"><h3 id="target-title">适配后角色</h3><p>当前角色的动作适配结果。自动循环，与右侧源动作同步对照。</p></div><div id="target-viewer" class="viewport" role="group" aria-labelledby="target-title"><p id="target-error" class="error" role="alert"></p></div></div>
-      <div class="comparison"><div class="preview-copy"><h3 id="source-title">SayMotion 原始动作</h3><p>SayMotion 生成的原始动作。自动循环，用于与左侧角色对照。</p></div><div id="source-viewer" class="viewport" role="group" aria-labelledby="source-title"><p id="source-error" class="error" role="alert"></p></div></div>
+      <div class="comparison"><div class="preview-copy"><h3 id="target-title">Adapted Character</h3><p>Motion adapted to this character. Loops automatically in sync with the source on the right.</p></div><div id="target-viewer" class="viewport" role="group" aria-labelledby="target-title"><p id="target-error" class="error" role="alert"></p></div></div>
+      <div class="comparison"><div class="preview-copy"><h3 id="source-title">SayMotion Source Motion</h3><p>Original SayMotion output. Loops automatically for comparison with the character on the left.</p></div><div id="source-viewer" class="viewport" role="group" aria-labelledby="source-title"><p id="source-error" class="error" role="alert"></p></div></div>
     </div>
   </section>
 </main>
-<footer aria-label="游戏资产下载">
+<footer aria-label="Game asset downloads">
   <ul id="asset-links"></ul>
-  <p id="asset-note">暂无可下载资产。生成完成后，当前预览版本的下载链接会显示在这里。</p>
+  <p id="asset-note">No downloadable assets yet. Links for the displayed versions will appear here after generation.</p>
 </footer>
 <script type="module" src="/static/preview.js"></script>
 </body>

@@ -20,7 +20,7 @@ description: "Generate or revise a Tripo character from an agreed brief. Use whe
    permission for this generation before calling build_generate with
    paid_confirmed=true. Proactively offer this authorization; reuse a creation
    approval already given after the same brief/provider/credit notice.
-   Ask directly in chat: 请输入“同意”，或告诉我需要修改什么。
+   Ask directly in chat: Please reply 'I agree', or tell me what you would like to change.
    Do not mention confirmation buttons or require a form.
    Do not invent an exact price. Missing/unavailable-user responses are not
    approval: leave one next action and pause, without repeated blocker messages.

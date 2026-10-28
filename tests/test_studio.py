@@ -118,7 +118,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertNotIn("vscode/askQuestions", metadata["tools"])
         for tool in ("openBrowserPage", "readPage", "runPlaywrightCode"):
             self.assertIn(tool, metadata["tools"])
-        for phrase in ("请输入“同意”，或告诉我需要修改什么。", "one scoped confirmation",
+        for phrase in ("Please reply 'I agree', or tell me what you would like to change.", "one scoped confirmation",
                        "agreement to only one part records only that part",
                        "Do not require numbered answers",
                        "do not require exact wording", "automatically", "fresh exports subfolder"):
@@ -138,7 +138,7 @@ class WorkspaceTests(unittest.TestCase):
                 metadata = yaml.safe_load(content.split("---", 2)[1])
                 self.assertEqual(metadata["name"], name)
                 self.assertTrue(metadata["description"])
-                self.assertIn("请输入“同意”，或告诉我需要修改什么。", content)
+                self.assertIn("Please reply 'I agree', or tell me what you would like to change.", content)
                 self.assertIn("Do not mention confirmation buttons", content)
                 self.assertNotIn("vscode/askQuestions", content)
                 self.assertNotIn("independent fields", content)
@@ -146,6 +146,23 @@ class WorkspaceTests(unittest.TestCase):
             content = (ROOT / ".github" / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
             self.assertIn("explicitly combined scope records both decisions", content)
             self.assertIn("partial affirmative records only its stated scope", content)
+
+    def test_project_text_and_pages_are_english(self):
+        paths = [ROOT / "README.md"]
+        for folder, pattern in (
+            (".github", "*.md"), ("docs", "*.md"), ("docs", "*.html"),
+            ("web", "*.html"), ("web", "*.js"), ("evals", "*.json"),
+        ):
+            paths.extend((ROOT / folder).rglob(pattern))
+        for path in paths:
+            with self.subTest(path=path.relative_to(ROOT)):
+                self.assertIsNone(re.search(
+                    r"[\u3400-\u4dbf\u4e00-\u9fff]", path.read_text(encoding="utf-8"),
+                ), "Project-owned text must be in English")
+        for path in (ROOT / "web" / "index.html", ROOT / "docs" / "index.html"):
+            self.assertIn('<html lang="en">', path.read_text(encoding="utf-8"))
+        agent = (ROOT / ".github" / "agents" / "castsmith-studio.agent.md").read_text(encoding="utf-8")
+        self.assertIn("Use English for", agent)
 
     def test_pin_is_full_and_installed_commit_matches(self):
         pin = studio.expected_commit()

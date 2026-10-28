@@ -1,139 +1,157 @@
-# 从一句话到健美操角色：CastSmith 实际会话
+# From One Prompt to an Aerobics Character: A Real CastSmith Session
 
-> **用户反馈：“这个例子运行的非常成功。”**
+> **User feedback: "This example worked very well."**
 >
-> 一次真实的聊天驱动制作：描述角色和动作，确认付费操作，调整外观，
-> 检查绑定，再生成动作并交付。所有截图均来自这次会话的本地 UI，
-> 不是设计稿或模拟数据。
+> A real chat-driven production session: describe a character and action,
+> authorize paid operations, revise the appearance, inspect binding, then
+> generate motion and deliver the files. All screenshots and video show
+> actual local previews, not mockups or simulated data.
 
-**时间：** 2026 年 10 月 27 日晚（UTC−07:00；构建记录使用 UTC，日期为 10 月 28 日）。
+**Session date:** October 27, 2026, evening (UTC-07:00). Build records use UTC,
+so their date is October 28. Original conversation excerpts are translated
+into English. Published screenshots and video were refreshed with English labels;
+the generated models, motion and build IDs are unchanged.
 
-[观看带 MP4 的 GitHub Pages 展示页](https://samguan2020.github.io/castsmith-agent/) ·
-[查看制作对话](./conversation.md) · [角色迭代](#角色迭代) ·
-[绑定与动作](#绑定与动作) · [质量与边界](#质量与边界) ·
-[在原工作区重新打开](#在原工作区重新打开)
+[Watch the MP4 on GitHub Pages](https://samguan2020.github.io/castsmith-agent/) ·
+[Production conversation](./conversation.md) · [Character iteration](#character-iteration) ·
+[Binding and motion](#binding-and-motion) · [Quality and limitations](#quality-and-limitations) ·
+[Reopen in the original workspace](#reopen-in-the-original-workspace)
 
-## 最终 UI
+## Final UI
 
-![CastSmith 四窗口预览：左上人物、右上绑定测试、左下适配后角色、右下 SayMotion 源动作，底部为下载入口](./images/studio-overview.png)
+![Four-panel CastSmith preview: character at top left, binding test at top right, adapted character at bottom left, SayMotion source at bottom right, and downloads below](./images/studio-overview.png)
 
-上图是一张**静态截图**。远程观看请打开
-[GitHub Pages 展示页](https://samguan2020.github.io/castsmith-agent/)，
-其中嵌入了[可下载的 MP4](./media/castsmith-aerobics.mp4)，不依赖本地服务。
-录像为 16.2 秒、1280 × 960、30 fps、H.264 / yuv420p，无音频，已启用渐进播放。
-录制直接读取四个实际模型预览画布，排成四窗口并叠加标题，不包含桌面或聊天界面；
-视频包含约两轮 8 秒动作，起点不一定为动作第 0 秒。
-原工作区的交互式 UI 仍可以旋转、缩放角色，并自动循环播放动画。
+The image above is a **static screenshot**. For remote playback, open the
+[GitHub Pages showcase](https://samguan2020.github.io/castsmith-agent/), which
+embeds a [downloadable MP4](./media/castsmith-aerobics.mp4) without requiring
+a local service. The video is 16.2 seconds, 1280 × 960, 30 fps, H.264 / yuv420p,
+silent, and optimized for progressive playback.
 
-| UI 区域 | 显示内容 |
+The recording reads the four actual model-preview canvases, arranges them in
+four panels and adds English titles. It captures no desktop or chat window.
+It contains approximately two eight-second cycles, not necessarily starting
+at motion time zero. The original interactive UI still supports model rotation,
+zoom and automatic animation looping.
+
+| UI area | What it shows |
 |---|---|
-| 人物 3D 预览 | 第二版角色的外观和服装；拖动旋转，滚轮缩放 |
-| RigTest · 绑定测试 | 免费本地生成的抬臂、抬腿测试，用来观察关节变形；不是健美操 |
-| 适配后角色 | 已适配到选定角色的 8 秒健美操 |
-| SayMotion 原始动作 | 与适配后角色同步播放的源动作，便于对照 |
-| 游戏资产下载 | 角色 GLB、预览 PNG、角色清单、角色动作 GLB、源动作 GLB、质量报告、动作清单 |
+| Character 3D Preview | The second character's appearance and clothing; drag to rotate, scroll to zoom |
+| RigTest · Binding Test | Free local arm and leg lifts for joint-deformation inspection; not aerobics |
+| Adapted Character | The eight-second aerobics animation adapted to the selected character |
+| SayMotion Source Motion | Source motion synchronized with the adapted result for comparison |
+| Game asset downloads | Character GLB, preview PNG, character manifest, adapted motion GLB, source GLB, quality report and motion manifest |
 
-生成、付费授权和验收都在聊天中进行；预览 UI 没有生成、选择或播放控制按钮。
+Generation, paid authorization and review take place in chat. The preview UI
+has no generation, selection or playback-control buttons.
 
-## 从需求到交付
+## From brief to delivery
 
-用户的最初需求：
+The initial user request, translated into English:
 
-> 生成一个青春少女，梳着黑色的马尾辫，穿着白色紧身裤，跳健美操
+> Generate a youthful young woman with a black ponytail, wearing white fitted
+> leggings, doing aerobics.
 
-制作时明确采用 **20–25 岁成年年轻女性**设定。未指定的部分采用已向用户说明的默认值：
-半写实 3D 风格、浅蓝色运动上衣、白色运动鞋，以及原地完成的 8 秒循环动作。
+Production explicitly used an **adult woman aged 20-25**. Unspecified details
+used defaults disclosed to the user: a semi-realistic 3D style, light blue
+athletic top, white sneakers and an eight-second, in-place looping action.
 
-| 阶段 | 发生了什么 | 人的决定 |
+| Stage | What happened | Human decision |
 |---|---|---|
-| 需求与校验 | 同时保存角色需求和健美操规格，先创建不含动作的角色草稿 | 用户授权 Tripo 角色生成 |
-| 第一版角色 | 生成外观，打开精确版本预览 | 用户要求“身材再纤细一点，面容再美丽一点” |
-| 第二版角色 | 创建有原版血缘记录的新候选，原版不覆盖 | 用户另行授权第二次 Tripo 生成，然后接受第二版外观 |
-| 免费绑定测试 | 选用第二版，自动运行本地 RigTest，验证预览确实播放 | 用户接受已披露风险的绑定结果，并授权指定的 SayMotion 动作生成 |
-| 健美操与交付 | 生成源动作、适配角色、检查结构、打开对照预览、复制导出文件并校验哈希 | 用户随后反馈本例运行非常成功 |
+| Brief and validation | Save character and aerobics requirements together; create a character-only draft | Authorize Tripo character generation |
+| First character | Generate appearance and open the exact preview | Request a slimmer figure and a more beautiful face |
+| Second character | Create a candidate linked to the original; preserve the first version | Separately authorize the second Tripo generation, then accept its appearance |
+| Free binding test | Select the second character, run local RigTest and verify visible playback | Accept disclosed binding risks and authorize the saved SayMotion request |
+| Aerobics and delivery | Generate source motion, adapt it, check structure, open comparison and copy files with hash checks | Later report that the example worked very well |
 
-整个过程生成了 **两个角色候选、一份绑定测试和一份创作动作**。
-没有因为 MCP 等待超时而重复提交付费生成；每次都先查询原构建的实际状态。
+The session produced **two character candidates, one binding test and one
+creative motion**. MCP wait timeouts did not trigger duplicate paid submissions;
+the existing build's actual state was checked first.
 
-## 角色迭代
+## Character iteration
 
-| 第一版 | 第二版 |
+| First version | Second version |
 |---|---|
-| ![第一版角色的实际预览截图](./images/character-v1.png) | ![第二版角色的实际预览截图](./images/character-v2.png) |
-| 首次生成，供用户检查外观 | 按用户意见调整纤细身形和精致五官，保留服装与黑色马尾设定 |
+| ![Actual first-character preview](./images/character-v1.png) | ![Actual second-character preview](./images/character-v2.png) |
+| Initial appearance for user inspection | Revised figure and facial features, preserving the outfit and black ponytail brief |
 
-两张图是本次工作区中各自版本的真实预览，镜头角度可能不同，
-不构成同角度的体型测量或自动美观评分。外观是否满意由用户判断。
+These are real previews of the respective builds. Camera angles can differ;
+this is not a matched-angle body measurement or automated beauty assessment.
+The user decides whether the appearance is satisfactory.
 
-**第二版角色简述**
+**Second character brief**
 
-- 成年年轻女性，健康、纤细的运动体型，自然协调的比例。
-- 柔和鹅蛋脸、精致五官、杏眼、自然微笑。
-- 黑色高马尾，浅蓝色短袖运动上衣。
-- 白色不透紧身运动长裤、白色运动鞋。
-- 半写实 3D 风格；中立姿势便于绑定。
+- An adult young woman with a healthy, slender athletic figure and natural proportions.
+- A soft oval face, refined features, almond-shaped eyes and a subtle smile.
+- A black high ponytail and light blue short-sleeved athletic top.
+- Opaque white fitted athletic leggings and white sneakers.
+- A semi-realistic 3D style and a neutral pose suitable for rigging.
 
-## 绑定与动作
+## Binding and motion
 
-### 免费本地绑定测试
+### Free local binding test
 
-![第二版角色的 RigTest 绑定测试窗口](./images/rig-test.png)
+![Second character in the RigTest binding-test window](./images/rig-test.png)
 
-在用户接受第二版外观后自动运行。记录的播放证据：
-RigTest 的 `data-state` 为 `ready`，`data-time` 从约 **3.98 秒推进到 5.18 秒**。
-这证明该版本的测试已加载并播放，不代表所有关节或蒙皮质量正确。
+The test ran automatically after the user accepted the second appearance.
+Recorded playback evidence: RigTest had `data-state="ready"`, and `data-time`
+advanced from approximately **3.98 to 5.18 seconds**. This proves that the exact
+test loaded and played, not that every joint or skin weight is correct.
 
-### 健美操与源动作同步对照
+### Synchronized aerobics and source comparison
 
-![左侧为第二版角色的健美操，右侧为 SayMotion 源动作，两者处于同步预览中](./images/motion-comparison.png)
+![Adapted second character on the left and synchronized SayMotion source motion on the right](./images/motion-comparison.png)
 
-保存并获授权的动作规格：
+The saved and authorized motion specification:
 
-| 项目 | 内容 |
+| Field | Value |
 |---|---|
-| 名称 | `aerobics` |
-| 时长 | 8 秒 |
-| 循环 | 是；循环接缝仍有机器警告 |
-| 动作描述 | 原地左右踏步配合摆臂，随后交替提膝、向上伸臂，保持朝前并回到起始姿势 |
-| 提供方 | SayMotion；角色外观由 Tripo 生成 |
-| 输出 | 适配后角色动作 GLB、SayMotion 源动作 GLB、清单与质量报告 |
+| Name | `aerobics` |
+| Duration | 8 seconds |
+| Loop | Yes; machine warnings remain at the seam |
+| Description | In-place side steps with arm swings, followed by alternating knee lifts and upward reaches, facing forward and returning to the starting stance |
+| Providers | SayMotion for motion; Tripo for character appearance |
+| Outputs | Adapted character motion GLB, SayMotion source GLB, manifest and quality report |
 
-动作描述是**生成目标**，不是已通过动作语义验证的保证。
-对照预览验证了两侧模型均为 `ready`、时间同步推进并跨越循环边界。
-导出的角色动作结构检查记录的时长为 **8.0 秒**。
+The description is a **generation target**, not a guarantee of verified motion
+semantics. The comparison confirmed both views were `ready`, their times
+advanced together and playback crossed the loop boundary. The exported adapted
+motion's structural report recorded a duration of **8.0 seconds**.
 
-## 质量与边界
+## Quality and limitations
 
-**流程运行成功、结构检查通过，不等于“没有质量问题”。** 本次报告仍为 `needs_review`。
+**Execution success and structural validity do not mean "no quality problems."**
+The report remains `needs_review`.
 
-| 检查 | 结果或限制 |
+| Check | Result or limitation |
 |---|---|
-| 角色与动作结构 | 通过；动作包含 23 根骨骼，时长 8.0 秒 |
-| 导出文件完整性 | 复制到新的交付目录，文件大小与 SHA-256 校验通过 |
-| RigTest 筛查 | 存在约 4–8 秒间的可能脚滑警告 |
-| 动作脚滑筛查 | 存在多处可能脚滑警告；启发式结果不等于已确认脚滑 |
-| 旋转突变 | 适配后约 3.1–5.8 秒有警告；源动作也有少量此类警告，适配后更多，原因未确定 |
-| 蒙皮拉伸 | 适配后存在网格边拉伸警告 |
-| 循环接缝 | 8 秒处存在速度不连续警告 |
-| 未验证 | 衣物网格穿插、动作语义、真实接触、解剖关节限制、蒙皮权重正确性、游戏引擎导入 |
+| Character and motion structure | Passed; the motion has 23 bones and lasts 8.0 seconds |
+| Delivered file integrity | Copied into a fresh delivery folder; sizes and SHA-256 hashes verified |
+| RigTest screening | Possible foot-slide warnings around 4-8 seconds |
+| Motion foot-slide screening | Multiple possible-slide warnings; a heuristic is not proof of actual sliding |
+| Rotation spikes | Adapted warnings around 3.1-5.8 seconds; a few also occur in the source, with more after adaptation; cause unresolved |
+| Skin stretching | Mesh-edge-stretch warnings in the adapted result |
+| Loop seam | Velocity-discontinuity warnings at 8 seconds |
+| Unchecked | Clothing intersections, motion semantics, true contacts, anatomical limits, skin-weight correctness and game-engine import |
 
-没有把重复处理说成修复，也没有声称自动完成 IK 锁脚、碰撞修复或通用蒙皮修复。
-交付文件不等于质量验收或 Unity / Unreal / Godot 导入认证。
+Unchanged reprocessing was not described as repair. No automatic IK foot
+locking, collision correction or general skin-weight repair was claimed.
+Delivery is not quality acceptance or a certified Unity / Unreal / Godot import.
 
-用户已在聊天中接受第二版外观和绑定测试结果，并授权指定动作的付费生成。
-交付时动作的引擎验收记录为 `pending`；后续“运行非常成功”的用户反馈如实展示，
-**本页归档没有改写任何资产验收状态**。
+The user accepted the second appearance and binding result, and authorized the
+specified paid motion. At delivery, the motion's engine review was `pending`.
+The later successful-workflow feedback is presented honestly.
+**Publishing or translating this archive has not changed any asset review state.**
 
-## 精确版本与交付
+## Exact versions and delivery
 
-| 记录 | 构建 ID |
+| Record | Build ID |
 |---|---|
-| 第一版角色 | `build-0a76836facf64f6db191e6936af2b106` |
-| 第二版角色，工作版本 | `build-5b37f1acc8314ac7a93c004958011ea0` |
-| 第二版 RigTest | `build-e4a5fa7169924efb816ed57fa2e22189` |
-| 健美操，片段 0 | `build-6f8df30edd4a45c9a6323b6b1bd8e2be` |
+| First character | `build-0a76836facf64f6db191e6936af2b106` |
+| Second character, working version | `build-5b37f1acc8314ac7a93c004958011ea0` |
+| Second-character RigTest | `build-e4a5fa7169924efb816ed57fa2e22189` |
+| Aerobics, clip 0 | `build-6f8df30edd4a45c9a6323b6b1bd8e2be` |
 
-本地交付目录（相对原工作区根目录）：
+Local delivery folder, relative to the original workspace root:
 
 ```text
 exports/
@@ -150,26 +168,28 @@ exports/
       manifest.json
 ```
 
-原始文件继续保留在本地 `.castsmith/artifacts/<build-id>/`。
-原始模型、数据库、完整报告、原始交付文件和凭据**没有上传到本案例页面**；
-页面公开发布文字记录、静态 UI 截图和另行录制的演示 MP4。
-克隆仓库不会获得原始 GLB 和本地资产数据库。
+Original files remain in local `.castsmith/artifacts/<build-id>/`.
+Original models, the database, full reports, original delivery files and
+credentials **are not published as page assets**. The public page includes
+documentation, UI screenshots and a separately recorded demonstration MP4.
+Cloning this repository does not provide the original GLBs or local asset database.
 
-## 在原工作区重新打开
+## Reopen in the original workspace
 
-以下链接**仅适用于拥有这批本地资产、且已启动 8767 端口预览服务的机器**，
-不是部署在 GitHub 上的交互式页面：
+The following link works **only on a machine that has these local assets and
+a preview service running on port 8767**. It is not a GitHub-hosted interactive viewer:
 
-[打开精确版本的四窗口预览](http://127.0.0.1:8767/?character=build-5b37f1acc8314ac7a93c004958011ea0&rig=build-e4a5fa7169924efb816ed57fa2e22189&motion=build-6f8df30edd4a45c9a6323b6b1bd8e2be&clip=0&section=motion)
+[Open the exact four-panel local preview](http://127.0.0.1:8767/?character=build-5b37f1acc8314ac7a93c004958011ea0&rig=build-e4a5fa7169924efb816ed57fa2e22189&motion=build-6f8df30edd4a45c9a6323b6b1bd8e2be&clip=0&section=motion)
 
-必要时，在原工作区运行：
+If needed, run this in the original workspace:
 
 ```powershell
 .\.venv\Scripts\python.exe .\scripts\studio.py web --port 8767
 ```
 
-该命令只启动预览，不提交新的付费生成。端口已被占用时不要重复启动或终止不明进程。
+This only starts a preview; it submits no paid generation. If the port is
+occupied, do not start a duplicate or terminate an unidentified process.
 
 ---
 
-[制作对话记录](./conversation.md) · [返回项目说明](../../../README.md)
+[Production conversation](./conversation.md) · [Project README](../../../README.md)
