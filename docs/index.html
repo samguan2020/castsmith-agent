@@ -27,13 +27,6 @@
     .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 3px; font-size: 12px; font-weight: 700; }
     h1 { font-size: clamp(36px, 6vw, 68px); line-height: 1.2; letter-spacing: -2px; margin: 18px 0 22px; }
     h1 span { color: var(--accent); }
-    .asset-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; margin: 32px 0 16px; padding: 0; list-style: none; }
-    .asset-flow li { position: relative; border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--panel); }
-    .asset-flow li:last-child { border-color: var(--accent); }
-    .asset-flow li:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: -19px; width: 8px; height: 8px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); transform: translateY(-50%) rotate(45deg); }
-    .asset-flow span { display: block; color: var(--accent); font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; }
-    .asset-flow strong { display: block; font-size: 18px; line-height: 1.4; margin-bottom: 10px; }
-    .asset-flow p, .flow-note { font-size: 14px; color: var(--muted); margin: 0; }
     section { scroll-margin-top: 24px; padding-block: 36px; }
     h2 { font-size: 29px; line-height: 1.3; letter-spacing: -.7px; margin: 0 0 14px; }
     h3 { font-size: 19px; margin: 0 0 9px; }
@@ -41,14 +34,6 @@
     .muted, figcaption { color: var(--muted); }
     .video-frame { background: #080d09; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
     video { display: block; width: 100%; aspect-ratio: 4 / 3; background: #101512; }
-    .video-note { padding: 16px 22px; border-top: 1px solid var(--line); font-size: 14px; }
-    .video-note p:last-child { margin: 0; }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
-    .stat { border-top: 1px solid var(--line); padding: 18px 0; }
-    .stat strong { display: block; font-size: 27px; color: var(--accent); }
-    .stat span { font-size: 13px; color: var(--muted); }
-    .quote { border-left: 3px solid var(--accent); margin: 0; padding: 16px 24px; background: var(--panel); border-radius: 0 12px 12px 0; font-size: 19px; }
-    .quote small { display: block; color: var(--muted); font-size: 13px; margin-top: 10px; }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     figure { margin: 0; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; overflow: hidden; }
     figure img { display: block; width: 100%; aspect-ratio: 1.25; object-fit: contain; background: #121a16; }
@@ -63,27 +48,28 @@
     .dialogue { padding: 0 22px 10px; }
     .dialogue p { border-left: 2px solid var(--line); padding-left: 16px; font-size: 15px; }
     .dialogue strong { color: var(--accent); }
-    .notice { border: 1px solid #6d6242; border-radius: 12px; background: #242319; padding: 24px; }
-    .notice h3 { color: #eee0ad; }
-    .notice ul { padding-left: 22px; margin-bottom: 0; }
-    .builds { display: grid; grid-template-columns: 130px 1fr; gap: 12px 20px; border: 1px solid var(--line); border-radius: 12px; padding: 22px; font-size: 14px; }
-    dt { color: var(--muted); }
-    dd { margin: 0; min-width: 0; }
-    code { overflow-wrap: anywhere; color: #d7e7d0; font-size: 12px; }
-    footer { border-top: 1px solid var(--line); margin-top: 35px; padding: 28px 0 42px; font-size: 13px; color: var(--muted); }
-    @media (max-width: 1000px) {
-      .asset-flow { grid-template-columns: 1fr; }
-      .asset-flow li:not(:last-child)::after { top: auto; right: auto; bottom: -19px; left: 50%; transform: translateX(-50%) rotate(135deg); }
-    }
+    .system-map { border: 1px solid var(--line); border-radius: 16px; padding: 24px; background: var(--panel); }
+    .system-layer { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 24px; }
+    .layer-label { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .system-map p, .system-map li { font-size: 14px; color: var(--muted); }
+    .skill-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; list-style: none; padding: 0; margin: 0; }
+    .skill-list strong { display: block; color: var(--ink); font-size: 14px; }
+    .system-connection { text-align: center; padding: 20px 0; margin: 20px 0; border-block: 1px solid var(--line); color: var(--accent); font-size: 13px; }
+    .runtime-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .runtime-grid > div { border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+    .runtime-grid h4 { font-size: 15px; margin: 0 0 6px; }
+    .runtime-grid p { margin: 0; }
+    .tool-list { padding: 0 22px 18px; margin: 0; list-style: none; }
+    .tool-list li + li { margin-top: 10px; }
+    .tool-list code { color: var(--ink); overflow-wrap: anywhere; }
+    .system-loop { margin-top: 24px; }
     @media (max-width: 700px) {
       .hero { padding-top: 44px; }
-      .grid, .steps { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .builds { grid-template-columns: 1fr; gap: 4px; }
-      dd { margin-bottom: 12px; }
+      .grid, .steps, .system-layer, .skill-list, .runtime-grid { grid-template-columns: 1fr; }
+      .system-map { padding: 18px; }
+      .system-layer { gap: 12px; }
       .nav-links { gap: 12px; }
       .wrap { width: calc(100% - 28px); }
-      .video-note { padding: 14px; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
@@ -94,6 +80,7 @@
     <nav class="wrap" aria-label="Main navigation">
       <a class="brand" href="./">CastSmith<span> / Agent</span></a>
       <div class="nav-links">
+        <a href="#architecture">Architecture</a>
         <a href="#demo">Watch the demo</a>
         <a href="#conversation">Conversation</a>
         <a href="https://github.com/samguan2020/castsmith-agent">GitHub ↗</a>
@@ -104,63 +91,102 @@
     <div class="hero">
       <div class="eyebrow">CastSmith Agent / Natural-language game asset creation</div>
       <h1>Turn natural language into<br><span>game characters &amp; motion.</span></h1>
-      <ol class="asset-flow" role="list" aria-label="From a natural-language idea to game assets">
-        <li><span>01 / DESCRIBE</span><strong>Describe your idea</strong>
-          <p>Appearance and actions in natural language.</p></li>
-        <li><span>02 / CHARACTER</span><strong>Create the character</strong>
-          <p>Generate a 3D character and review its appearance.</p></li>
-        <li><span>03 / BINDING</span><strong>Check the binding</strong>
-          <p>Run a free RigTest and review deformation before animation.</p></li>
-        <li><span>04 / MOTION</span><strong>Bring it to life</strong>
-          <p>Generate animation and preview the result.</p></li>
-        <li><span>05 / GAME ASSETS</span><strong>Download your assets</strong>
-          <p>GLB character and animation files for your game project.</p></li>
-      </ol>
-      <p class="flow-note">CastSmith Agent coordinates each step. Paid generation requires your explicit consent.</p>
+      <section aria-labelledby="workflow-title">
+        <h2 id="workflow-title">From brief to delivery, decisions stay in chat.</h2>
+        <ol class="steps">
+          <li><h3>Capture character and motion together</h3><p>A black ponytail, white athletic leggings and aerobics. Establish an adult woman aged 20–25 and save an eight-second, in-place looping motion.</p></li>
+          <li><h3>Generate the first character</h3><p>Validate the brief, disclose potential Tripo credit use and generate after consent. Open the exact version for appearance review.</p></li>
+          <li><h3>Iterate on specific feedback</h3><p>“Make her figure a little slimmer and her face more beautiful.” Create a second candidate with fresh paid consent, preserving the original.</p></li>
+          <li><h3>Run the free binding test automatically</h3><p>After appearance acceptance, select that version and run local RigTest. Verify model readiness and advancing animation time.</p></li>
+          <li><h3>Generate the saved aerobics request</h3><p>Disclose binding risks, obtain binding acceptance and authorization for the exact SayMotion request, then start without asking for unchanged requirements again.</p></li>
+          <li><h3>Compare and deliver</h3><p>Show source and adapted motion. Deliver the character, motion, source, manifests and report, checking sizes and SHA-256 hashes. Delivery is not acceptance.</p></li>
+        </ol>
+      </section>
     </div>
 
+    <section id="architecture" aria-labelledby="architecture-title">
+      <h2 id="architecture-title">One agent. Seven skills. One execution engine.</h2>
+      <p class="muted">CastSmith is a single-agent system, not a team of independent agents.
+        Skills guide the workflow; tools perform concrete operations.</p>
+      <div class="system-map" role="group" aria-label="CastSmith system architecture">
+        <div class="system-layer">
+          <div class="layer-label">01 / Conversation &amp; orchestration</div>
+          <div>
+            <h3>One Copilot agent in VS Code</h3>
+            <p>The user describes a character and its actions in chat. The agent uses the selected model,
+              loads the relevant skills on demand, and asks for reviews and paid-generation permission.</p>
+            <ul class="skill-list" aria-label="Seven on-demand skills">
+              <li><strong>studio-setup</strong>Workspace setup and diagnostics</li>
+              <li><strong>character-design</strong>Appearance brief and requirements</li>
+              <li><strong>character-build</strong>Character generation and iteration</li>
+              <li><strong>rig-diagnose</strong>Binding tests and deformation inspection</li>
+              <li><strong>motion-build</strong>Character-pinned animation generation</li>
+              <li><strong>motion-diagnose</strong>Source/adapted motion investigation</li>
+              <li><strong>asset-deliver</strong>Exact-version asset handoff</li>
+            </ul>
+          </div>
+        </div>
+        <div class="system-connection">Tool calls &darr; &nbsp; &uarr; Results and build state</div>
+        <div class="system-layer">
+          <div class="layer-label">02 / Tools &amp; execution</div>
+          <div>
+            <h3>One CastSmith MCP server</h3>
+            <p>The server exposes the pinned CastSmith engine. The agent coordinates its tools;
+              this repository does not reimplement provider clients, retargeting or asset storage.</p>
+            <details>
+              <summary>12 active MCP tools, grouped by responsibility</summary>
+              <ul class="tool-list">
+                <li><strong>Inspect and select:</strong> <code>character_library</code>,
+                  <code>character_select</code>, <code>build_list</code>, <code>build_status</code></li>
+                <li><strong>Draft and generate:</strong> <code>build_create</code>,
+                  <code>motion_create</code>, <code>build_generate</code></li>
+                <li><strong>Review and revise:</strong> <code>character_review</code>,
+                  <code>character_feedback</code>, <code>motion_feedback</code>, <code>build_review</code></li>
+                <li><strong>Local processing and RigTest:</strong> <code>build_reprocess</code></li>
+              </ul>
+            </details>
+            <div class="runtime-grid" aria-label="Execution dependencies">
+              <div><h4>Tripo</h4><p>Paid 3D character generation</p></div>
+              <div><h4>SayMotion</h4><p>Paid source-motion generation</p></div>
+              <div><h4>Blender 3.6</h4><p>Local binding tests and motion adaptation</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="system-connection">Versioned builds &darr; &nbsp; &uarr; Review and iteration</div>
+        <div class="system-layer">
+          <div class="layer-label">03 / State &amp; presentation</div>
+          <div>
+            <h3>Local assets, read-only previews and delivery</h3>
+            <p>The engine persists build records and artifacts in the workspace. The local viewer shows
+              the character, RigTest, and synchronized source/adapted motion. Reviews stay in chat.</p>
+            <p>Host file, terminal and browser tools support request validation, preview verification
+              and delivery. The local delivery command checks saved files and copies exact-version
+              GLBs, manifests and quality reports into a fresh export folder.</p>
+          </div>
+        </div>
+      </div>
+      <div class="system-loop">
+        <h3>How the workflow runs</h3>
+        <p class="muted">Understand the request, load a skill, validate inputs and inspect saved state,
+          then call the appropriate tool. Appearance acceptance unlocks the free RigTest.
+          Binding acceptance and explicit SayMotion permission precede motion generation.
+          Results return to chat for review, iteration and asset delivery.</p>
+        <p class="muted">Generation calls are synchronous; skills are workflow guidance, not independent
+          background workers. <a href="https://github.com/samguan2020/castsmith-agent#skills">Explore the project README &rarr;</a></p>
+      </div>
+    </section>
+
     <section id="demo" aria-labelledby="demo-title">
-      <h2 id="demo-title">Press play. No local service required.</h2>
-      <p class="muted">A real production session from October 27, 2026: the actual character, free binding test,
-        and synchronized adapted and source motion.</p>
+      <h2 id="demo-title">Demo: A character in motion</h2>
+      <p class="muted">See a generated character, its binding check, and an aerobics animation.</p>
       <div class="video-frame">
         <video controls playsinline loop preload="metadata"
           poster="examples/ponytail-aerobics/images/studio-overview.png"
           aria-label="Silent CastSmith four-panel demo: character preview, binding test, adapted aerobics and SayMotion source motion">
           <source src="examples/ponytail-aerobics/media/castsmith-aerobics.mp4" type="video/mp4">
-          Your browser does not support embedded video. Please use the MP4 download link below.
+          Your browser does not support embedded video.
         </video>
-        <div class="video-note">
-          <p>16.2 seconds · 1280 × 960 · 30 fps · H.264 MP4 · No audio</p>
-          <p>Recorded from the actual preview canvases, arranged in four panels with English title overlays.
-            No desktop or chat capture. Approximately two eight-second cycles, not necessarily starting at frame zero.
-            <a href="examples/ponytail-aerobics/media/castsmith-aerobics.mp4" download>Download the MP4</a></p>
-        </div>
       </div>
-      <div class="stats" aria-label="Session overview">
-        <div class="stat"><strong>2</strong><span>Character candidates with lineage preserved</span></div>
-        <div class="stat"><strong>8 sec</strong><span>Aerobics animation duration</span></div>
-        <div class="stat"><strong>4</strong><span>Actual model preview panels</span></div>
-        <div class="stat"><strong>Delivered</strong><span>Local file integrity verified</span></div>
-      </div>
-    </section>
-
-    <section aria-label="User feedback">
-      <blockquote class="quote">“This example worked very well.”
-        <small>English translation of the user's feedback after delivery. A successful workflow does not mean all quality warnings were resolved.</small>
-      </blockquote>
-    </section>
-
-    <section aria-labelledby="workflow-title">
-      <h2 id="workflow-title">From brief to delivery, decisions stay in chat.</h2>
-      <ol class="steps">
-        <li><h3>Capture character and motion together</h3><p>A black ponytail, white athletic leggings and aerobics. Establish an adult woman aged 20–25 and save an eight-second, in-place looping motion.</p></li>
-        <li><h3>Generate the first character</h3><p>Validate the brief, disclose potential Tripo credit use and generate after consent. Open the exact version for appearance review.</p></li>
-        <li><h3>Iterate on specific feedback</h3><p>“Make her figure a little slimmer and her face more beautiful.” Create a second candidate with fresh paid consent, preserving the original.</p></li>
-        <li><h3>Run the free binding test automatically</h3><p>After appearance acceptance, select that version and run local RigTest. Verify model readiness and advancing animation time.</p></li>
-        <li><h3>Generate the saved aerobics request</h3><p>Disclose binding risks, obtain binding acceptance and authorization for the exact SayMotion request, then start without asking for unchanged requirements again.</p></li>
-        <li><h3>Compare and deliver</h3><p>Show source and adapted motion. Deliver the character, motion, source, manifests and report, checking sizes and SHA-256 hashes. Delivery is not acceptance.</p></li>
-      </ol>
     </section>
 
     <section aria-labelledby="versions-title">
@@ -200,49 +226,10 @@
       </div></details>
       <details><summary>05 / Generate, compare and deliver</summary><div class="dialogue">
         <p><strong>Assistant</strong><br>The eight-second motion is generated and exported. Source and adapted previews are loaded, synchronized and looping. Copy files and verify hashes; disclose foot-slide, rotation-spike, skin-stretch and loop-seam warnings without claiming automatic repair.</p>
-        <p><strong>User</strong><br>This example worked very well. I have committed and pushed the changes to the GitHub repo. Now turn this chat session and the generated UI content into a page on GitHub.</p>
-      </div></details>
-      <details><summary>06 / Make the local result viewable remotely</summary><div class="dialogue">
-        <p><strong>User</strong><br>Make the project public and create its repository page. The local website cannot be opened remotely, so save it as an MP4 and embed it in the page.</p>
-        <p><strong>This page</strong><br>The public repository and GitHub Pages serve a static site. The recorded MP4 needs no localhost service, 3D server or provider account. No additional paid generation was submitted. The published text and demonstration media have since been converted to English.</p>
+        <p><strong>User</strong><br>Looks good. Work done. Show me game asset I can download</p>
       </div></details>
     </section>
 
-    <section aria-labelledby="quality-title">
-      <h2 id="quality-title">The result is visible. The risks should be, too.</h2>
-      <div class="notice">
-        <h3>Structural validity is not a clean quality bill.</h3>
-        <p>The machine report remains <code>needs_review</code>. At delivery, motion review was <code>pending</code>.
-          Publishing or translating this archive has not changed any asset review state.</p>
-        <ul>
-          <li>Warnings include possible foot sliding, skin stretching and a velocity discontinuity at the loop seam.</li>
-          <li>Adapted rotation spikes occur around 3.1–5.8 seconds. The source has a few such warnings; the adapted result has more. The cause is unresolved.</li>
-          <li>Clothing intersections, motion semantics, true contacts, skin-weight correctness and game-engine import remain unverified.</li>
-          <li>No general skin-weight repair, IK foot locking or collision repair is claimed. The video does not mean these issues were resolved.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section aria-labelledby="evidence-title">
-      <h2 id="evidence-title">Evidence for this exact session, not a generic demo.</h2>
-      <dl class="builds">
-        <dt>First character</dt><dd><code>build-0a76836facf64f6db191e6936af2b106</code></dd>
-        <dt>Second character</dt><dd><code>build-5b37f1acc8314ac7a93c004958011ea0</code></dd>
-        <dt>Free binding test</dt><dd><code>build-e4a5fa7169924efb816ed57fa2e22189</code></dd>
-        <dt>Aerobics / clip 0</dt><dd><code>build-6f8df30edd4a45c9a6323b6b1bd8e2be</code></dd>
-      </dl>
-      <p class="muted">Only documentation, screenshots and a demonstration MP4 are published. Credentials,
-        the database, original GLBs and full quality reports remain in the original workspace.
-        <a href="https://github.com/samguan2020/castsmith-agent/blob/main/docs/examples/ponytail-aerobics/README.md">Read the case record and delivery notes ↗</a></p>
-    </section>
   </main>
-  <footer>
-    <div class="wrap">
-      <p>CastSmith / Agent-first character production · <a href="https://github.com/samguan2020/castsmith-agent">Project repository</a></p>
-      <p>This product shell is public. Its pinned execution-engine dependency is still private, so installation
-        requires authorized upstream access. This page works independently: it runs no generation engine,
-        calls no paid services and contains no visitor analytics.</p>
-    </div>
-  </footer>
 </body>
 </html>
